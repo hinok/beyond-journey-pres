@@ -1,0 +1,79 @@
+function createReactCssModulesPlugin(env) {
+  // ...code
+}
+
+function isSSR(caller) {
+  return caller.target === 'node';
+}
+
+function isDevLegacy(caller) {
+  return caller.devLegacy === true;
+}
+
+module.exports = function (api) {
+  const development = api.env(['development', 'development-legacy']);
+  // if `development-legacy` will be provided, env should be still named as `development`
+  const env = development ? 'development' : api.env();
+  const ssr = api.caller(isSSR);
+  const developmentLegacy = api.caller(isDevLegacy);
+
+  const presets = [
+    [
+      '@babel/preset-env',
+      {
+        useBuiltIns: 'entry',
+        corejs: '3',
+        modules: false,
+        ...(ssr && {
+          targets: {
+            node: 'current',
+          },
+        }),
+        ...(!ssr &&
+          !developmentLegacy &&
+          development && {
+            targets: {
+              chrome: '75',
+            },
+          }),
+      },
+    ],
+    '@babel/preset-react',
+  ];
+
+  const basePlugins = [
+    '@babel/plugin-syntax-dynamic-import',
+    '@loadable/babel-plugin',
+    development && 'react-hot-loader/babel',
+    ['@babel/plugin-proposal-decorators', { legacy: true }],
+    ['@babel/plugin-proposal-class-properties', { loose: true }],
+    createReactCssModulesPlugin(env),
+  ].filter(Boolean);
+
+  const plugins = {
+    development: [...basePlugins],
+    production: [
+      ...basePlugins,
+      'transform-react-remove-prop-types',
+      '@babel/plugin-transform-react-inline-elements',
+      '@babel/plugin-transform-react-constant-elements',
+    ],
+    test: [
+      '@babel/plugin-syntax-dynamic-import',
+      'dynamic-import-webpack',
+      '@babel/plugin-transform-runtime',
+      'transform-react-remove-prop-types',
+      ['@babel/plugin-proposal-decorators', { legacy: true }],
+      ['@babel/plugin-proposal-class-properties', { loose: true }],
+      '@babel/plugin-transform-modules-commonjs',
+      createReactCssModulesPlugin(env),
+    ],
+  };
+
+  const config = {
+    presets,
+    plugins: plugins[env],
+  };
+
+  return config;
+};

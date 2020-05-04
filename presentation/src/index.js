@@ -23,10 +23,14 @@ import {
   Text,
   UnorderedList,
   indentNormalizer,
+  Quote,
 } from "spectacle";
+
+import vsDark from "prism-react-renderer/themes/vsDark";
 
 import LiveCode from "./components/LiveCode";
 import { BaffleCarousel } from "./components/BaffleText";
+import GithubLink from "./components/GithubLink";
 import beyondImage from "./images/beyond.png";
 import beyond2Image from "./images/beyond2.png";
 
@@ -46,6 +50,22 @@ import technologiesImage from "./images/technologies.png";
 import webpackImage from "./images/webpack.png";
 import nextjsTwitter1Image from "./images/nextjs-twitter-1.png";
 import nextjsTwitter2Image from "./images/nextjs-twitter-2.png";
+import reactHotLoaderGithubImage from "./images/react-hot-loader-github.png";
+import beyondWwwMismatchImage from "./images/beyond-www-mismatch-warning.png";
+import reactGithubMismatchImage from "./images/react-github-mismatch.png";
+import reactHelmetNytImage from "./images/react-helmet-nyt.png";
+import apolloImage from "./images/apollo.jpg";
+import sentryChunkErrorsImage from "./images/sentry-chunk-errors.png";
+import apolloGithub1Image from "./images/apollo-github-1.png";
+import apolloGithub2Image from "./images/apollo-github-2.png";
+import twitterLogoSvg from "./images/twitter-logo.svg";
+import githubLogoImage from "./images/GitHub-Mark-120px-plus.png";
+
+import webpackCssSample from "raw-loader!./code-samples/webpack-css-sample";
+import babelConfigSample from "raw-loader!./code-samples/babel-config-sample";
+import reactToolboxDefaultCheckerSample from "raw-loader!./code-samples/react-toolbox-defaultChecker-sample";
+import reactToolboxDefaultCheckerFixSample from "raw-loader!./code-samples/react-toolbox-defaultChecker-fix-sample";
+import compareAppVersionsSample from "raw-loader!./code-samples/compare-app-versions-sample";
 
 const technologiesGroups = [
   {
@@ -123,6 +143,12 @@ const technologiesGroups = [
   },
 ];
 
+const appCodeSample = `
+const App = () => <h1>Hello World!</h1>;
+
+render(<App />);
+`;
+
 // SPECTACLE_CLI_THEME_START
 const theme = {
   fonts: {
@@ -164,57 +190,6 @@ const template = ({ slideNumber, numberOfSlides }) => (
   </FlexBox>
 );
 // SPECTACLE_CLI_TEMPLATE_END
-
-const formidableLogo =
-  "https://avatars2.githubusercontent.com/u/5078602?s=280&v=4";
-
-const cppCodeBlock = indentNormalizer(`
-#include <iostream>
-#include <cstdlib>
-#include <sstream>
-#include <pthread.h>
-
-struct thread_data_t
-{
-   int  thread_id;
-   std::string message;
-};
-
-void *print_thread_message(void *thread_arg)
-{
-   struct thread_data_t *thread_data;
-   thread_data = (struct thread_data_t *) thread_arg;
-
-   cout << "Thread ID: " << thread_data->thread_id;
-   cout << "Message: " << thread_data->message << endl;
-
-   pthread_exit(NULL);
-}
-
-int main()
-{
-  pthread_t threads[NUM_THREADS];
-  struct thread_data_t thread_data[NUM_THREADS];
-
-  for (int i = 0; i < NUM_THREADS; i++)
-  {
-    auto curried_add = [](int x) -> function<int(int)> { return [=](int y) { return x + y; }; };
-    auto answer = curried_add(i)(5);
-
-    std::stringstream message;
-    message << "The math result is " << answer << "!";
-    thread_data.thread_id = i;
-    thread_data.message = message.str();
-    int err = pthread_create(&threads, NULL, print_thread_message, (void *)&thread_data[i]);
-
-    if (err)
-    {
-      exit(-1)
-    }
-  }
-
-  return 0;
-}`);
 
 const Presentation = () => (
   <Deck theme={theme} template={template} transitionEffect="fade">
@@ -344,7 +319,8 @@ const Presentation = () => (
       <FlexBox height="100%" flexDirection="column">
         <Heading color="blueDark">Why 🤔</Heading>
         <Text color="secondary">
-          Just use <CodeSpan color="blueLight">create-react-app</CodeSpan> <span>or</span> <CodeSpan color="blueLight">next.js</CodeSpan>
+          Just use <CodeSpan color="blueLight">create-react-app</CodeSpan>{" "}
+          <span>or</span> <CodeSpan color="blueLight">next.js</CodeSpan>
         </Text>
       </FlexBox>
     </Slide>
@@ -410,32 +386,234 @@ const Presentation = () => (
 
     <Slide backgroundColor="#fff">
       <FlexBox height="100%" flexDirection="column">
-        <Heading color="blueDark">When we started <small>4 years ago...</small></Heading>
+        <Heading color="blueDark">Why not CSS-in-JS?</Heading>
+        <Text color="secondary">When the project started, we could pick:</Text>
+        <UnorderedList fontSize="30px" color="secondary">
+          <ListItem>
+            <GithubLink href="https://github.com/cssinjs/jss">JSS</GithubLink>
+          </ListItem>
+          <ListItem>
+            <FlexBox justifyContent="left" width="100%">
+              <GithubLink href="https://github.com/FormidableLabs/radium">
+                <s>Radium</s>
+              </GithubLink>{" "}
+              <Text fontSize="20px" color="tertiary" style={{ padding: 0 }}>
+                (maintenance status now, no future development)
+              </Text>
+            </FlexBox>
+          </ListItem>
+          <ListItem>
+            <GithubLink href="https://github.com/rebassjs/rebass">
+              Rebass
+            </GithubLink>
+          </ListItem>
+          <ListItem>
+            <FlexBox justifyContent="left" width="100%">
+              <GithubLink href="https://github.com/rtsao/csjs">
+                <s>CSJS</s>
+              </GithubLink>{" "}
+              <Text fontSize="20px" color="tertiary" style={{ padding: 0 }}>
+                (no development since 2017)
+              </Text>
+            </FlexBox>
+          </ListItem>
+          <ListItem>
+            <GithubLink href="https://github.com/css-modules/css-modules">
+              CSS Modules{" "}
+              <Appear elementNum={0}>
+                <Text fontSize="20px" color="tertiary" style={{ padding: 0 }}>👈 Picked</Text>
+              </Appear>
+            </GithubLink>
+          </ListItem>
+          <ListItem>
+            <GithubLink href="https://github.com/Khan/aphrodite">
+              Aphrodite
+            </GithubLink>
+          </ListItem>
+        </UnorderedList>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="#fff">
+      <FlexBox height="100%" flexDirection="column">
+        <Heading color="blueDark" style={{ marginBottom: 0, paddingBottom: 0 }}>
+          CSS-in-JS
+        </Heading>
+        <Text color="secondary" fontSize="24px">
+          Past - Present by{" "}
+          <a
+            className="link"
+            href="https://www.youtube.com/watch?v=W-zVPl7CGrY&feature=youtu.be"
+          >
+            Max Stoiber @Agent Conf
+          </a>
+        </Text>
+        <Grid
+          gridTemplateColumns="1fr 1fr"
+          gridTemplateRows="1fr 1fr"
+          alignItems="center"
+          justifyContent="center"
+          gridRowGap={1}
+        >
+          <UnorderedList fontSize="24px" color="secondary">
+            <ListItem>
+              <span className="date">Nov 14:</span> JSS
+            </ListItem>
+            <ListItem>
+              <span className="date">Nov 14:</span> @vjeux (conference pres)
+            </ListItem>
+            <ListItem>
+              <span className="date">Jan 15:</span> <s>Radium</s>
+            </ListItem>
+            <ListItem>
+              <span className="date">Feb 15:</span> Rebass
+            </ListItem>
+            <ListItem>
+              <span className="date">May 15:</span> CSS Modules (not technically
+              CSS-in-JS)
+            </ListItem>
+            <ListItem>
+              <span className="date">Sep 15:</span> <s>CSJS</s>
+            </ListItem>
+            <ListItem>
+              <span className="date">Oct 15:</span> Aphrodite
+            </ListItem>
+            <ListItem>
+              <span className="date">Jun 16:</span> Fela
+            </ListItem>
+            <ListItem>
+              <span className="date">Jul 16:</span> <s>Glamor</s>
+            </ListItem>
+            <ListItem>
+              <span className="date">Oct 16:</span> jsxstyle
+            </ListItem>
+          </UnorderedList>
+          <UnorderedList fontSize="24px" color="secondary">
+            <ListItem>
+              <span className="date">Oct 16:</span> styled-components
+            </ListItem>
+            <ListItem>
+              <span className="date">Dec 16:</span> styletron
+            </ListItem>
+            <ListItem>
+              <span className="date">Dec 16:</span> styled-jsx
+            </ListItem>
+            <ListItem>
+              <span className="date">Mar 17:</span> Astroturf
+            </ListItem>
+            <ListItem>
+              <span className="date">Apr 17:</span> <s>Glamorous</s>
+            </ListItem>
+            <ListItem>
+              <span className="date">May 17:</span> styled-components v2
+            </ListItem>
+            <ListItem>
+              <span className="date">Jul 17:</span> Emotion
+            </ListItem>
+            <ListItem>
+              <span className="date">Sep 17:</span> Linaria
+            </ListItem>
+            <ListItem>
+              <span className="date">Nov 18:</span> Emotion v10
+            </ListItem>
+            <ListItem>
+              <span className="date">Jun 19:</span> theme-ui
+            </ListItem>
+          </UnorderedList>
+        </Grid>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="#fff">
+      <FlexBox height="100%" flexDirection="column">
+        <Heading color="blueDark">Potential problems* CSS-in-JS</Heading>
         <UnorderedList color="secondary">
-          <ListItem>create-react-app &amp; <CodeSpan>next.js</CodeSpan> didn't exist</ListItem>
-          <ListItem>webpack 2.x was in beta</ListItem>
-          <ListItem>react-router 4.x was in beta</ListItem>
-          <ListItem>apollo 0.x</ListItem>
-          <ListItem>storybook 2.x</ListItem>
+          <ListItem>
+            watch out for performance issues (
+            <a
+              className="link"
+              title="The unseen performance costs of modern CSS-in-JS libraries in React apps by Aggelos Arvanitakis"
+              href="https://calendar.perfplanet.com/2019/the-unseen-performance-costs-of-css-in-js-in-react-apps/"
+            >
+              #1
+            </a>
+            ,{" "}
+            <a
+              className="link"
+              title="Reddit's issue with styled-components"
+              href="https://www.reddit.com/r/redesign/comments/8smbob/an_update_on_performance/e10rd4h?utm_source=share&utm_medium=web2x"
+            >
+              #2
+            </a>
+            ,{" "}
+            <a
+              className="link"
+              title="Performance tests"
+              href="http://necolas.github.io/react-native-web/benchmarks/"
+            >
+              #3
+            </a>
+            ,{" "}
+            <a
+              className="link"
+              title="Stop using CSS in JavaScript for web development"
+              href="https://medium.com/@gajus/stop-using-css-in-javascript-for-web-development-fa32fb873dcc"
+            >
+              #4
+            </a>
+            ,{" "}
+            <a
+              className="link"
+              title="Styled components V4: the good, the bad, and something completely different."
+              href="https://medium.com/ansarada-thinking/styled-components-v4-the-good-the-bad-and-something-completely-different-e891139e0138"
+            >
+              #5
+            </a>
+            )
+          </ListItem>
+          <ListItem>no cacheable stylesheets (when CSS included in JS)</ListItem>
+          <ListItem>more total bytes sent (CSS + runtime lib)</ListItem>
+          <ListItem>no async loading of CSS (when CSS included in JS)</ListItem>
+        </UnorderedList>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="#fff">
+      <FlexBox height="100%" flexDirection="column">
+        <Heading color="blueDark">
+          When we started <small>4 years ago...</small>
+        </Heading>
+        <UnorderedList color="secondary">
+          <ListItem>
+            <CodeSpan>create-react-app</CodeSpan> &amp;{" "}
+            <CodeSpan>next.js</CodeSpan> didn't exist
+          </ListItem>
+          <ListItem>
+            <CodeSpan>webpack 2.x</CodeSpan> was in beta
+          </ListItem>
+          <ListItem>
+            <CodeSpan>react-router</CodeSpan> 4.x was in beta
+          </ListItem>
+          <ListItem>
+            <CodeSpan>apollo</CodeSpan> 0.x
+          </ListItem>
+          <ListItem>
+            <CodeSpan>storybook</CodeSpan> 2.x
+          </ListItem>
+          <ListItem>CSS-in-JS was still super new...</ListItem>
         </UnorderedList>
       </FlexBox>
     </Slide>
 
     <Slide backgroundColor="codeBackground">
-      <LiveCode
-        code={`
-      const App = () => <h1>Hello World!</h1>;
-
-      render(<App />);
-      `}
-      />
+      <LiveCode code={appCodeSample} />
     </Slide>
 
     <Slide backgroundColor="#fff">
       <FlexBox height="100%" flexDirection="column">
-        <Heading color="blueDark">Before we deploy</Heading>
+        <Heading color="blueDark">Before deployment</Heading>
         <Text color="secondary">
-          We need to build first, <CodeSpan color="blueLight">oh my webpack</CodeSpan>
+          Build first, <CodeSpan color="blueLight">oh my webpack...</CodeSpan>
         </Text>
       </FlexBox>
     </Slide>
@@ -443,10 +621,7 @@ const Presentation = () => (
     <Slide backgroundColor="#2c3a42">
       <FlexBox height="100%" flexDirection="column">
         <video autoPlay muted loop>
-          <source
-            src="https://i.imgur.com/3PLnSkF.mp4"
-            type="video/mp4"
-          />
+          <source src="https://i.imgur.com/3PLnSkF.mp4" type="video/mp4" />
         </video>
       </FlexBox>
     </Slide>
@@ -468,11 +643,40 @@ const Presentation = () => (
       </FlexBox>
     </Slide>
 
+    <Slide backgroundColor="codeBackground">
+      <Heading color="blueLight">CSS &amp; Webpack</Heading>
+      <CodePane
+        fontSize={18}
+        language="javascript"
+        theme={vsDark}
+        autoFillHeight
+      >
+        {webpackCssSample}
+      </CodePane>
+    </Slide>
+
+    <Slide backgroundColor="codeBackground">
+      <Heading color="blueLight">babel.config.js</Heading>
+      <CodePane
+        fontSize={18}
+        language="javascript"
+        theme={vsDark}
+        autoFillHeight
+      >
+        {babelConfigSample}
+      </CodePane>
+    </Slide>
+
     <Slide backgroundColor="blueDark">
       <FlexBox flexDirection="column" height="100%">
-        <Heading color="blueLight" fontSize="150px">WEBPACK<br />IS HARD</Heading>
+        <Heading color="blueLight" fontSize="150px">
+          WEBPACK
+          <br />
+          IS HARD
+        </Heading>
         <Text color="#fff">
-          If you can, use <CodeSpan>create-react-app</CodeSpan>, <CodeSpan>next.js</CodeSpan> etc.
+          If you can, use <CodeSpan>create-react-app</CodeSpan>,{" "}
+          <CodeSpan>next.js</CodeSpan> etc.
         </Text>
       </FlexBox>
     </Slide>
@@ -481,7 +685,9 @@ const Presentation = () => (
       <FlexBox flexDirection="column" height="100%">
         <Heading color="blueLight">It's hard to follow</Heading>
         <Text color="#fff">
-          It's hard to rebuild all optimizations and features that next.js or gatsby have built in.
+          It's hard to rebuild all optimizations and features that{" "}
+          <CodeSpan>next.js</CodeSpan> or <CodeSpan>gatsby</CodeSpan> have built
+          in.
         </Text>
       </FlexBox>
     </Slide>
@@ -502,72 +708,300 @@ const Presentation = () => (
       backgroundOpacity={1}
     />
 
-    <Slide>
-      <FlexBox height="100%" flexDirection="column">
-        <Heading margin="0px" fontSize="150px">
-          SPECTACLE
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueDark">SSR &amp; Webpack</Heading>
+        <Heading fontSize="30px" color="secondary">
+          We need to build our application twice
         </Heading>
-        <Heading margin="0px" fontSize="h2">
-          A ReactJS Presentation Library
+        <OrderedList color="secondary">
+          <ListItem>client (browsers)</ListItem>
+          <ListItem>server (node.js)</ListItem>
+        </OrderedList>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueDark">Uncharted territory</Heading>
+        <UnorderedList color="secondary">
+          <ListItem>hot reloading for client and server</ListItem>
+          <ListItem>the same css hashes for client and server</ListItem>
+          <ListItem>mock packages that cannot be used on server</ListItem>
+          <ListItem>serve production hashed files (.css, .js)</ListItem>
+          <ListItem>graphql errors handling</ListItem>
+        </UnorderedList>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="blueDark">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueLight">#3 Sometimes works</Heading>
+        <Grid
+          gridTemplateColumns="1fr 1fr"
+          gridTemplateRows="1fr 1fr"
+          alignItems="center"
+          justifyContent="center"
+          gridRowGap={1}
+        >
+          <Heading fontSize="30px" color="primary">
+            Development build
+          </Heading>
+          <Heading fontSize="30px" color="primary">
+            ❌ Doesn't work
+          </Heading>
+          <Heading fontSize="30px" color="primary">
+            Production build
+          </Heading>
+          <Heading fontSize="30px" color="primary">
+            ✅ Works
+          </Heading>
+        </Grid>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueDark">react-hot-loader</Heading>
+        <Heading fontSize="30px" color="secondary">
+          Tweak React components in real time.
         </Heading>
-        <Heading margin="0px 32px" color="primary" fontSize="h3">
-          Where you can write your decks in JSX, Markdown, or MDX!
+        <Box>
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/xsSnOQynTHs"
+            frameBorder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </Box>
+      </FlexBox>
+    </Slide>
+
+    <Slide
+      backgroundColor="#fff"
+      backgroundImage={`url(${reactHotLoaderGithubImage})`}
+      backgroundSize="contain"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide backgroundColor="codeBackground">
+      <Heading color="blueLight">react-toolbox's defaultChecker</Heading>
+      <CodePane
+        fontSize={18}
+        language="javascript"
+        theme={vsDark}
+        autoFillHeight
+      >
+        {reactToolboxDefaultCheckerSample}
+      </CodePane>
+    </Slide>
+
+    <Slide backgroundColor="codeBackground">
+      <Heading color="blueLight">Fix, provide customChecker</Heading>
+      <CodePane
+        fontSize={18}
+        language="javascript"
+        theme={vsDark}
+        autoFillHeight
+      >
+        {reactToolboxDefaultCheckerFixSample}
+      </CodePane>
+    </Slide>
+
+    <Slide backgroundColor="blueDark">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueLight">#4 Problem</Heading>
+        <Heading fontSize="30px" color="primary">
+          DOM mismatch
         </Heading>
       </FlexBox>
-      <Notes>
-        <p>
-          Notes are shown in presenter mode. Open up
-          localhost:3000/?presenterMode=true to see them.
-        </p>
-      </Notes>
     </Slide>
+
     <Slide
-      backgroundColor="tertiary"
-      backgroundImage="url(https://github.com/FormidableLabs/dogs/blob/master/beau.jpg?raw=true)"
-      backgroundOpacity={0.5}
-    >
-      <Heading>Custom Backgrounds</Heading>
-      <UnorderedList>
-        <ListItem>
-          <CodeSpan>backgroundColor</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundImage</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundOpacity</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundSize</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundPosition</CodeSpan>
-        </ListItem>
-        <ListItem>
-          <CodeSpan>backgroundRepeat</CodeSpan>
-        </ListItem>
-      </UnorderedList>
+      backgroundColor="#fff"
+      backgroundImage={`url(${beyondWwwMismatchImage})`}
+      backgroundSize="contain"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide
+      backgroundColor="#fff"
+      backgroundImage={`url(${reactGithubMismatchImage})`}
+      backgroundSize="contain"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueDark">A bit longer explanation</Heading>
+        <UnorderedList>
+          <ListItem>
+            <GithubLink href="https://github.com/facebook/react/issues/11128">
+              React 16 client side render doesn't update DOM's style that comes
+              from SSR #11128
+            </GithubLink>
+          </ListItem>
+          <ListItem>
+            <GithubLink href="https://github.com/facebook/react/issues/10591">
+              Document that you can't rely on React 16 SSR patching up
+              differences #10591
+            </GithubLink>
+          </ListItem>
+          <ListItem>
+            <GithubLink href="https://github.com/facebook/react/issues/11189">
+              Need a hook for hydration mismatch #11189
+            </GithubLink>
+          </ListItem>
+        </UnorderedList>
+      </FlexBox>
     </Slide>
-    <Slide transitionEffect="slide">
-      <Heading>Code Blocks</Heading>
+
+    <Slide backgroundColor="blueDark">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueLight">#5 Problem</Heading>
+        <Heading fontSize="30px" color="primary">
+          react-helmet &amp; SSR
+        </Heading>
+      </FlexBox>
+    </Slide>
+
+    <Slide
+      backgroundColor="#fff"
+      backgroundImage={`url(${reactHelmetNytImage})`}
+      backgroundSize="contain"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Box width="60%">
+          <Quote color="secondary">
+            [...] when viewing the HTML of a page, you might see the correct
+            page content with the wrong meta tags. Or the correct page content
+            with empty values for the meta tags.
+          </Quote>
+          <Text fontSize="20px" color="tertiary">
+            <a
+              className="link"
+              href="https://open.nytimes.com/the-future-of-meta-tag-management-for-modern-react-development-ec26a7dc9183"
+            >
+              The Future of Meta Tag Management for Modern React Development:
+              Introducing React-Helmet-Async
+            </a>{" "}
+            by Scott Taylor (Lead Software Engineer at The New York Times)
+          </Text>
+        </Box>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading>Solution</Heading>
+        <Text>
+          <GithubLink href="https://github.com/staylor/react-helmet-async#readme">
+            <CodeSpan>react-helmet-async</CodeSpan>
+          </GithubLink>
+        </Text>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="blueDark">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueLight">#5 Problem</Heading>
+        <Heading fontSize="30px" color="primary">
+          Houston, we have a problem
+        </Heading>
+      </FlexBox>
+    </Slide>
+
+    <Slide
+      backgroundColor="#fff"
+      backgroundImage={`url(${apolloImage})`}
+      backgroundSize="cover"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide
+      backgroundColor="#fff"
+      backgroundImage={`url(${apolloGithub1Image})`}
+      backgroundSize="contain"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide
+      backgroundColor="#fff"
+      backgroundImage={`url(${apolloGithub2Image})`}
+      backgroundSize="contain"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide backgroundColor="blueDark">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueLight">#6 Problem</Heading>
+        <Heading fontSize="30px" color="primary">
+          chunk loading errors
+        </Heading>
+      </FlexBox>
+    </Slide>
+
+    <Slide
+      backgroundColor="#fff"
+      backgroundImage={`url(${sentryChunkErrorsImage})`}
+      backgroundSize="contain"
+      backgroundPosition="center center"
+      backgroundOpacity={1}
+    />
+
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueDark">Deploy with fallback</Heading>
+        <UnorderedList color="secondary">
+          <ListItem>
+            on Monday (<CodeSpan>a.12zxc.js, b.25asd.js</CodeSpan>)
+          </ListItem>
+          <ListItem>
+            on Tuesday (<CodeSpan>a.12zxc.js, b.98jkl.js, c.45bnm.js</CodeSpan>)
+          </ListItem>
+          <ListItem>
+            Users from monday doesn't know about{" "}
+            <CodeSpan>b.98jkl.js, c.45bnm.js</CodeSpan>
+          </ListItem>
+          <ListItem>We need to cover that case</ListItem>
+        </UnorderedList>
+      </FlexBox>
+    </Slide>
+
+    <Slide backgroundColor="codeBackground">
+      <Heading>Solution</Heading>
       <Stepper
         defaultValue={[]}
         values={[
           [1, 1],
-          [23, 25],
-          [40, 42],
+          [2, 2],
+          [3, 6],
+          [8, 8],
+          [25, 32],
         ]}
       >
         {(value, step) => (
-          <Box position="relative">
+          <Box position="relative" className="fix-codepane">
             <CodePane
               highlightStart={value[0]}
               highlightEnd={value[1]}
               fontSize={18}
-              language="cpp"
+              language="javascript"
               autoFillHeight
             >
-              {cppCodeBlock}
+              {compareAppVersionsSample}
             </CodePane>
 
             <Box
@@ -577,121 +1011,77 @@ const Presentation = () => (
               right="0rem"
               bg="black"
             >
-              {/* This notes container won't appear for step 0 */}
+              {step === 0 && (
+                <Text fontSize="1.5rem" margin="0rem">
+                  It's a root component
+                </Text>
+              )}
 
               {step === 1 && (
                 <Text fontSize="1.5rem" margin="0rem">
-                  This is a note!
+                  <a
+                    className="link"
+                    href="https://reactjs.org/docs/react-component.html#componentdidcatch"
+                  >
+                    https://reactjs.org/docs/react-component.html#componentdidcatch
+                  </a>
                 </Text>
               )}
 
               {step === 2 && (
                 <Text fontSize="1.5rem" margin="0rem">
-                  You can use the stepper state to render whatever you like as
-                  you step through the code.
+                  Check if catched error is a chunk loading error
+                </Text>
+              )}
+
+              {step === 3 && (
+                <Text fontSize="1.5rem" margin="0rem">
+                  Fetch newest deployed version from API, if `result` is{" "}
+                  <CodeSpan fontSize="1.5rem" color="blueLight">
+                    true
+                  </CodeSpan>
+                  , it means that something went wrong and we render UI in an
+                  error state. If `result` is{" "}
+                  <CodeSpan fontSize="1.5rem" color="blueLight">
+                    false
+                  </CodeSpan>
+                  , we can reload the page and fetch newest webpack runtime with
+                  information about all new chunks.
+                </Text>
+              )}
+
+              {step === 4 && (
+                <Text fontSize="1.5rem" margin="0rem">
+                  Reload the page.
                 </Text>
               )}
             </Box>
           </Box>
         )}
       </Stepper>
-      <Text>
-        Code Blocks now auto size and scroll when there is an overflow of
-        content! They also auto-wrap longer lines.
-      </Text>
     </Slide>
-    <Slide>
-      <Heading>Animated Elements</Heading>
-      <OrderedList>
-        <Appear elementNum={0}>
-          <ListItem>Elements can animate in!</ListItem>
-        </Appear>
-        <Appear elementNum={2}>
-          <ListItem>
-            Just identify the order with the prop{" "}
-            <CodeSpan>elementNum</CodeSpan>!
-          </ListItem>
-        </Appear>
-        <Appear elementNum={1}>
-          <ListItem>Out of order</ListItem>
-        </Appear>
-      </OrderedList>
-    </Slide>
-    <Slide>
-      <FlexBox>
-        <Text>These</Text>
-        <Text>Text</Text>
-        <Text color="secondary">Items</Text>
-        <Text fontWeight="bold">Flex</Text>
+
+    <Slide backgroundColor="#fff">
+      <FlexBox flexDirection="column" height="100%">
+        <Heading color="blueDark">Thanks!</Heading>
+        <Text color="secondary">Questions?</Text>
+        <Text color="secondary" fontSize="30px">
+          Dawid Karabin, Wrocław 2020
+        </Text>
+        <FlexBox>
+          <Box>
+            <a href="https://twitter.com/hinoczek">
+              <img src={twitterLogoSvg} width="60px" />
+            </a>
+          </Box>
+          <Box>
+            <a href="https://github.com/hinok">
+              <img src={githubLogoImage} width="36px" />
+            </a>
+          </Box>
+        </FlexBox>
       </FlexBox>
-      <Grid gridTemplateColumns="1fr 2fr" gridColumnGap={15}>
-        <Box backgroundColor="primary">
-          <Text color="secondary">Single-size Grid Item</Text>
-        </Box>
-        <Box backgroundColor="secondary">
-          <Text>Double-size Grid Item</Text>
-        </Box>
-      </Grid>
-      <Grid
-        gridTemplateColumns="1fr 1fr 1fr"
-        gridTemplateRows="1fr 1fr 1fr"
-        alignItems="center"
-        justifyContent="center"
-        gridRowGap={1}
-      >
-        {Array(9)
-          .fill("")
-          .map((_, index) => (
-            <FlexBox paddingTop={0} key={`formidable-logo-${index}`} flex={1}>
-              <Image src={formidableLogo} width={100} />
-            </FlexBox>
-          ))}
-      </Grid>
     </Slide>
-    <Slide>
-      <Markdown>
-        {`
-          # Layout Tables in Markdown
-
-          | Browser         | Supported | Versions |
-          |-----------------|-----------|----------|
-          | Chrome          | Yes       | Last 2   |
-          | Firefox         | Yes       | Last 2   |
-          | Opera           | Yes       | Last 2   |
-          | Edge (EdgeHTML) | No        |          |
-          | IE 11           | No        |          |
-        `}
-      </Markdown>
-    </Slide>
-    <Markdown containsSlides>
-      {`
-        ### Even write multiple slides in Markdown
-        > Wonderfully formatted quotes
-
-        1. Even create
-        2. Lists in Markdown
-
-
-        - Or Unordered Lists
-        - Too!!
-        Notes: These are notes
-        ---
-        ### This slide was also generated in Markdown!
-
-        \`\`\`jsx
-        const evenCooler = "is that you can do code in Markdown";
-        // You can even specify the syntax type!
-        \`\`\`
-
-        ### A slide can have multiple code blocks too.
-
-        \`\`\`c
-        char[] someString = "Popular languages like C too!";
-        \`\`\`
-
-        Notes: These are more notes
-      `}
-    </Markdown>
   </Deck>
 );
 

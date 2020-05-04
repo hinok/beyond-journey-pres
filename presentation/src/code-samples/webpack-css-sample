@@ -1,0 +1,148 @@
+exports.css = ({ sassIncludePaths = [] }, env) => {
+  // Shorter classes without path in production
+  // Faster rebuilds by not calculating hash while development
+  const localIdentName = isProd(env) ? '[local]-[hash:base64:5]' : '[path]---[name]---[local]';
+  const sourcemapEnabled = false;
+
+  const tests = {
+    global: /\.global\.(css|scss)$/,
+    local: /^((?!\.global).)*(css|scss)$/,
+    css: /\.(css)$/,
+  };
+
+  const styleLoader = {
+    loader: 'style-loader',
+  };
+
+  const miniCssExtractLoader = {
+    loader: MiniCssExtractPlugin.loader,
+    options: {
+      hmr: isDev(env),
+    },
+  };
+
+  const getBaseLoaders = ({ enableSassLoader = true, enableCssModules = true } = {}) => {
+    const loaders = [
+      {
+        loader: 'css-loader',
+        options: {
+          modules: enableCssModules
+            ? {
+                mode: 'local',
+                localIdentName,
+              }
+            : false,
+          sourceMap: sourcemapEnabled,
+          importLoaders: 1,
+          onlyLocals: isSSR(env),
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: sourcemapEnabled,
+        },
+      },
+    ];
+
+    if (!enableSassLoader) {
+      return loaders;
+    }
+
+    return [
+      ...loaders,
+      {
+        loader: 'sass-loader',
+        options: {
+          sassOptions: {
+            includePaths: sassIncludePaths,
+          },
+          sourceMap: sourcemapEnabled,
+        },
+      },
+    ];
+  };
+
+  const clientProd = {
+    module: {
+      rules: [
+        {
+          test: tests.global,
+          use: [miniCssExtractLoader, ...getBaseLoaders({ enableCssModules: false })],
+          exclude: /react-toolbox|node_modules/,
+        },
+        {
+          test: tests.local,
+          use: [miniCssExtractLoader, ...getBaseLoaders()],
+          exclude: /react-toolbox/,
+        },
+        {
+          test: tests.css,
+          use: [miniCssExtractLoader, ...getBaseLoaders({ enableSassLoader: false })],
+          include: /react-toolbox/,
+        },
+      ],
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        // Use always [contenthash] instead of [chunkhash] for ExtractTextPlugin
+        // https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/153
+        filename: '[name].[contenthash:8].css',
+      }),
+    ],
+  };
+
+  const clientDev = {
+    module: {
+      rules: [
+        {
+          test: tests.global,
+          use: [styleLoader, ...getBaseLoaders({ enableCssModules: false })],
+          exclude: /react-toolbox|node_modules/,
+        },
+        {
+          test: tests.local,
+          use: [styleLoader, ...getBaseLoaders()],
+          exclude: /react-toolbox/,
+        },
+        {
+          test: tests.css,
+          use: [styleLoader, ...getBaseLoaders({ enableSassLoader: false })],
+          include: /react-toolbox/,
+        },
+      ],
+    },
+  };
+
+  const ssr = {
+    module: {
+      rules: [
+        {
+          test: tests.global,
+          use: [...getBaseLoaders({ enableCssModules: false })],
+          exclude: /react-toolbox|node_modules/,
+        },
+        {
+          test: tests.local,
+          use: [...getBaseLoaders()],
+          exclude: /react-toolbox/,
+        },
+        {
+          test: tests.css,
+          use: [...getBaseLoaders({ enableSassLoader: false })],
+          include: /react-toolbox/,
+        },
+      ],
+    },
+  };
+
+  if (isSSR(env)) {
+    return ssr;
+  }
+
+  if (isProd(env)) {
+    return clientProd;
+  }
+
+  return clientDev;
+};

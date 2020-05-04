@@ -1,0 +1,15 @@
+/*
+ * Fix for react-toolbox <Tabs />, <Tab /> components
+ * in development mode when react-hot-loader is used
+ */
+if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+  const {
+    overrideComponentTypeChecker,
+  } = require('react-toolbox/lib/utils/is-component-of-type');
+
+  overrideComponentTypeChecker(
+    (classType, reactElement) =>
+      reactElement &&
+      (reactElement.type === classType || reactElement.type.name === classType.displayName),
+  );
+}

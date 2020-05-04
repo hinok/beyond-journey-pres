@@ -3,10 +3,31 @@
   <head>
     <meta charset="utf-8">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Muli:wght@400;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Muli:wght@400;700&family=PT+Serif:wght@400;700&family=Fira+Code&display=swap" rel="stylesheet">
     <style>
       .react-live__editor textarea {
         outline: 0;
+      }
+
+      .link {
+        color: #26C6DA;
+        text-decoration: none;
+      }
+
+      .fix-codepane {
+        display: flex;
+        flex-flow: column;
+        flex: 1 0 0;
+      }
+
+      .fix-codepane > pre {
+        flex: 1 0 0;
+        max-height: 100% !important;
+      }
+
+      .date {
+        font-family: 'Fira Code', monospace;
+        font-size: 0.8em;
       }
     </style>
   </head>

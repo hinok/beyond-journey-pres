@@ -1,0 +1,35 @@
+class App extends Component {
+  componentDidCatch(error, errorInfo) {
+    if (!isWebpackChunkLoadingError(error)) {
+      sentry.log(error, errorInfo);
+      return;
+    }
+
+    compareAppVersions().then((result) => {
+      if (result) {
+        sentry.log(error, { fingerprint: ['webpack', 'error loading chunk'] });
+
+        // According to the docs: https://reactjs.org/docs/react-component.html#componentdidcatch
+        //
+        // In the event of an error, you can render a fallback UI with componentDidCatch()
+        // by calling setState, but this will be deprecated in a future release.
+        // Use static getDerivedStateFromError() to handle fallback rendering instead.
+        //
+        // For now we are okay with that, we will refactor it later.
+        this.setState({ error });
+        return;
+      }
+
+      // We have old application on the client so we ensure that errors are sent to sentry
+      // and we refresh the page
+      sentry
+        .flush({
+          error,
+          fingerprint: ['webpack', 'reloaded after error loading chunk'],
+        })
+        .then(() => {
+          window.location.reload(true);
+        });
+    });
+  }
+}
