@@ -1,6 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
+/* eslint-disable jsx-a11y/accessible-emoji */
+import React from 'react';
+import ReactDOM from 'react-dom';
 
+/* eslint-disable no-unused-vars */
 import {
   Appear,
   Box,
@@ -24,122 +26,130 @@ import {
   UnorderedList,
   indentNormalizer,
   Quote,
-} from "spectacle";
+} from 'spectacle';
+/* eslint-enable no-unused-vars */
 
-import vsDark from "prism-react-renderer/themes/vsDark";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import vsDark from 'prism-react-renderer/themes/vsDark';
 
-import LiveCode from "./components/LiveCode";
-import { BaffleCarousel } from "./components/BaffleText";
-import GithubLink from "./components/GithubLink";
-import beyondImage from "./images/beyond.png";
-import beyond2Image from "./images/beyond2.png";
+import LiveCode from './components/LiveCode';
+import { BaffleCarousel } from './components/BaffleText';
+import GithubLink from './components/GithubLink';
+import beyondImage from './images/beyond.png';
+import beyond2Image from './images/beyond2.png';
 
-import beyondWww1Image from "./images/beyond-www-1.png";
-import beyondWww2Image from "./images/beyond-www-2.png";
-import beyondWww3Image from "./images/beyond-www-3.png";
-import beyondWww4Image from "./images/beyond-www-4.png";
-import beyondWww5Image from "./images/beyond-www-5.png";
-import beyondWww6Image from "./images/beyond-www-6.png";
-import beyondWww7Image from "./images/beyond-www-7.png";
+import beyondWww1Image from './images/beyond-www-1.png';
+import beyondWww2Image from './images/beyond-www-2.png';
+import beyondWww3Image from './images/beyond-www-3.png';
+import beyondWww4Image from './images/beyond-www-4.png';
+import beyondWww5Image from './images/beyond-www-5.png';
+import beyondWww6Image from './images/beyond-www-6.png';
+import beyondWww7Image from './images/beyond-www-7.png';
 
-import be1Image from "./images/be-1.png";
-import be2Image from "./images/be-2.png";
-import createReactAppGithubImage from "./images/create-react-app-github.png";
-import nextjsGithubImage from "./images/nextjs-github.png";
-import technologiesImage from "./images/technologies.png";
-import webpackImage from "./images/webpack.png";
-import nextjsTwitter1Image from "./images/nextjs-twitter-1.png";
-import nextjsTwitter2Image from "./images/nextjs-twitter-2.png";
-import reactHotLoaderGithubImage from "./images/react-hot-loader-github.png";
-import beyondWwwMismatchImage from "./images/beyond-www-mismatch-warning.png";
-import reactGithubMismatchImage from "./images/react-github-mismatch.png";
-import reactHelmetNytImage from "./images/react-helmet-nyt.png";
-import apolloImage from "./images/apollo.jpg";
-import sentryChunkErrorsImage from "./images/sentry-chunk-errors.png";
-import apolloGithub1Image from "./images/apollo-github-1.png";
-import apolloGithub2Image from "./images/apollo-github-2.png";
-import twitterLogoSvg from "./images/twitter-logo.svg";
-import githubLogoImage from "./images/GitHub-Mark-120px-plus.png";
+import be1Image from './images/be-1.png';
+import be2Image from './images/be-2.png';
+import createReactAppGithubImage from './images/create-react-app-github.png';
+import nextjsGithubImage from './images/nextjs-github.png';
+import technologiesImage from './images/technologies.png';
+import webpackImage from './images/webpack.png';
+import nextjsTwitter1Image from './images/nextjs-twitter-1.png';
+import nextjsTwitter2Image from './images/nextjs-twitter-2.png';
+import reactHotLoaderGithubImage from './images/react-hot-loader-github.png';
+import beyondWwwMismatchImage from './images/beyond-www-mismatch-warning.png';
+import reactGithubMismatchImage from './images/react-github-mismatch.png';
+import reactHelmetNytImage from './images/react-helmet-nyt.png';
+import apolloImage from './images/apollo.jpg';
+import sentryChunkErrorsImage from './images/sentry-chunk-errors.png';
+import apolloGithub1Image from './images/apollo-github-1.png';
+import apolloGithub2Image from './images/apollo-github-2.png';
+import twitterLogoSvg from './images/twitter-logo.svg';
+import githubLogoImage from './images/GitHub-Mark-120px-plus.png';
 
-import webpackCssSample from "raw-loader!./code-samples/webpack-css-sample";
-import babelConfigSample from "raw-loader!./code-samples/babel-config-sample";
-import reactToolboxDefaultCheckerSample from "raw-loader!./code-samples/react-toolbox-defaultChecker-sample";
-import reactToolboxDefaultCheckerFixSample from "raw-loader!./code-samples/react-toolbox-defaultChecker-fix-sample";
-import compareAppVersionsSample from "raw-loader!./code-samples/compare-app-versions-sample";
+/* eslint-disable import/no-webpack-loader-syntax */
+/* eslint-disable import/order */
+/* eslint-disable import/no-unresolved */
+import webpackCssSample from 'raw-loader!./code-samples/webpack-css-sample';
+import babelConfigSample from 'raw-loader!./code-samples/babel-config-sample';
+import reactToolboxDefaultCheckerSample from 'raw-loader!./code-samples/react-toolbox-defaultChecker-sample';
+import reactToolboxDefaultCheckerFixSample from 'raw-loader!./code-samples/react-toolbox-defaultChecker-fix-sample';
+import compareAppVersionsSample from 'raw-loader!./code-samples/compare-app-versions-sample';
+/* eslint-enable import/no-webpack-loader-syntax */
+/* eslint-enable import/order */
+/* eslint-enable import/no-unresolved */
 
 const technologiesGroups = [
   {
-    name: "Code",
-    list: ["es6+", "typescript", "flow", "elm", "coffeescript"],
+    name: 'Code',
+    list: ['es6+', 'typescript', 'flow', 'elm', 'coffeescript'],
   },
   {
-    name: "Frameworks",
+    name: 'Frameworks',
     list: [
-      "none aka jquery",
-      "react.js",
-      "angular 2+",
-      "ember",
-      "vuejs",
-      "backbone",
-      "aurelia",
-      "web components (polymer)",
-      "web components (native)",
+      'none aka jquery',
+      'react.js',
+      'angular 2+',
+      'ember',
+      'vuejs',
+      'backbone',
+      'aurelia',
+      'web components (polymer)',
+      'web components (native)',
     ],
   },
   {
-    name: "CSS",
-    list: ["css", "css modules", "css in js"],
+    name: 'CSS',
+    list: ['css', 'css modules', 'css in js'],
   },
   {
-    name: "Bundlers",
+    name: 'Bundlers',
     list: [
-      "webpack",
-      "system.js",
-      "parcel",
-      "browserify",
-      "gulp.js",
-      "grunt.js",
-      "makefile",
+      'webpack',
+      'system.js',
+      'parcel',
+      'browserify',
+      'gulp.js',
+      'grunt.js',
+      'makefile',
     ],
   },
   {
-    name: "Api",
-    list: ["rest", "graphql", "falcor"],
+    name: 'Api',
+    list: ['rest', 'graphql', 'falcor'],
   },
   {
-    name: "Api clients",
-    list: ["relay", "apollo", "lokka", "fetch or xhr"],
+    name: 'Api clients',
+    list: ['relay', 'apollo', 'lokka', 'fetch or xhr'],
   },
   {
-    name: "State management",
-    list: ["setState", "redux", "mobx"],
+    name: 'State management',
+    list: ['setState', 'redux', 'mobx'],
   },
   {
-    name: "redux side effects",
-    list: ["redux-thunk", "redux-saga", "redux-observable", "middlewares"],
+    name: 'redux side effects',
+    list: ['redux-thunk', 'redux-saga', 'redux-observable', 'middlewares'],
   },
   {
-    name: "css processing",
-    list: ["sass/scss", "less", "stylus", "postcss", "cssnext"],
+    name: 'css processing',
+    list: ['sass/scss', 'less', 'stylus', 'postcss', 'cssnext'],
   },
   {
-    name: "Routing",
+    name: 'Routing',
     list: [
-      "react-router",
-      "router5",
-      "rrtr",
-      "react-router-component",
-      "react-mini-router",
-      "universal router",
+      'react-router',
+      'router5',
+      'rrtr',
+      'react-router-component',
+      'react-mini-router',
+      'universal router',
     ],
   },
   {
-    name: "Forms",
-    list: ["none", "formik", "redux-form"],
+    name: 'Forms',
+    list: ['none', 'formik', 'redux-form'],
   },
   {
-    name: "Testing",
-    list: ["jest", "mocha", "karma", "jasmime", "sinon", "chai"],
+    name: 'Testing',
+    list: ['jest', 'mocha', 'karma', 'jasmime', 'sinon', 'chai'],
   },
 ];
 
@@ -153,27 +163,28 @@ render(<App />);
 const theme = {
   fonts: {
     header: "'Montserrat', Helvetica, Arial, sans-serif",
-    text: "Helvetica, Arial, sans-serif",
+    text: 'Helvetica, Arial, sans-serif',
     beyondHeading: "'PT Serif', serif",
     beyondText: "'Muli', Helvetica, Arial, sans-serif",
   },
   colors: {
-    primary: "#ffffff",
-    secondary: "#424242",
-    tertiary: "#78909C",
-    quartenary: "#90A4AE",
-    quinary: "#B0BEC5",
-    senary: "#CFD8DC",
+    primary: '#ffffff',
+    secondary: '#424242',
+    tertiary: '#78909C',
+    quartenary: '#90A4AE',
+    quinary: '#B0BEC5',
+    senary: '#CFD8DC',
 
-    blueDark: "#182983",
-    blueLight: "#26C6DA",
-    codeBackground: "#1e1e1e",
-    beyond: "#FFD750",
+    blueDark: '#182983',
+    blueLight: '#26C6DA',
+    codeBackground: '#1e1e1e',
+    beyond: '#FFD750',
   },
 };
 // SPECTACLE_CLI_THEME_END
 
 // SPECTACLE_CLI_TEMPLATE_START
+// eslint-disable-next-line react/prop-types
 const template = ({ slideNumber, numberOfSlides }) => (
   <FlexBox
     justifyContent="space-between"
@@ -251,9 +262,9 @@ const Presentation = () => (
     ))}
 
     <Slide backgroundColor="#edf3f8">
-      <Box style={{ overflow: "scroll", flex: "1 0 0" }}>
-        <img src={be1Image} style={{ maxWidth: "100%" }} />
-        <img src={be2Image} style={{ maxWidth: "100%" }} />
+      <Box style={{ overflow: 'scroll', flex: '1 0 0' }}>
+        <img src={be1Image} style={{ maxWidth: '100%' }} alt="" />
+        <img src={be2Image} style={{ maxWidth: '100%' }} alt="" />
       </Box>
     </Slide>
 
@@ -277,13 +288,13 @@ const Presentation = () => (
         {technologiesGroups.map((group, index) => (
           <FlexBox
             flex={1}
-            key={index}
+            key={group.name}
             flexDirection="column"
             style={{
               backgroundColor:
                 (index + 1) % 2 === 0
-                  ? "rgba(255, 255, 255, 0.1)"
-                  : "transparent",
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'transparent',
             }}
           >
             <Text
@@ -291,7 +302,7 @@ const Presentation = () => (
               fontSize="10px"
               letterSpacing="0.2em"
               color="blueLight"
-              style={{ textTransform: "uppercase" }}
+              style={{ textTransform: 'uppercase' }}
             >
               {group.name}
             </Text>
@@ -319,7 +330,7 @@ const Presentation = () => (
       <FlexBox height="100%" flexDirection="column">
         <Heading color="blueDark">Why 🤔</Heading>
         <Text color="secondary">
-          Just use <CodeSpan color="blueLight">create-react-app</CodeSpan>{" "}
+          Just use <CodeSpan color="blueLight">create-react-app</CodeSpan>{' '}
           <span>or</span> <CodeSpan color="blueLight">next.js</CodeSpan>
         </Text>
       </FlexBox>
@@ -396,7 +407,7 @@ const Presentation = () => (
             <FlexBox justifyContent="left" width="100%">
               <GithubLink href="https://github.com/FormidableLabs/radium">
                 <s>Radium</s>
-              </GithubLink>{" "}
+              </GithubLink>{' '}
               <Text fontSize="20px" color="tertiary" style={{ padding: 0 }}>
                 (maintenance status now, no future development)
               </Text>
@@ -411,7 +422,7 @@ const Presentation = () => (
             <FlexBox justifyContent="left" width="100%">
               <GithubLink href="https://github.com/rtsao/csjs">
                 <s>CSJS</s>
-              </GithubLink>{" "}
+              </GithubLink>{' '}
               <Text fontSize="20px" color="tertiary" style={{ padding: 0 }}>
                 (no development since 2017)
               </Text>
@@ -419,9 +430,11 @@ const Presentation = () => (
           </ListItem>
           <ListItem>
             <GithubLink href="https://github.com/css-modules/css-modules">
-              CSS Modules{" "}
+              CSS Modules{' '}
               <Appear elementNum={0}>
-                <Text fontSize="20px" color="tertiary" style={{ padding: 0 }}>👈 Picked</Text>
+                <Text fontSize="20px" color="tertiary" style={{ padding: 0 }}>
+                  👈 Picked
+                </Text>
               </Appear>
             </GithubLink>
           </ListItem>
@@ -440,7 +453,7 @@ const Presentation = () => (
           CSS-in-JS
         </Heading>
         <Text color="secondary" fontSize="24px">
-          Past - Present by{" "}
+          Past - Present by{' '}
           <a
             className="link"
             href="https://www.youtube.com/watch?v=W-zVPl7CGrY&feature=youtu.be"
@@ -537,7 +550,7 @@ const Presentation = () => (
             >
               #1
             </a>
-            ,{" "}
+            ,{' '}
             <a
               className="link"
               title="Reddit's issue with styled-components"
@@ -545,7 +558,7 @@ const Presentation = () => (
             >
               #2
             </a>
-            ,{" "}
+            ,{' '}
             <a
               className="link"
               title="Performance tests"
@@ -553,7 +566,7 @@ const Presentation = () => (
             >
               #3
             </a>
-            ,{" "}
+            ,{' '}
             <a
               className="link"
               title="Stop using CSS in JavaScript for web development"
@@ -561,7 +574,7 @@ const Presentation = () => (
             >
               #4
             </a>
-            ,{" "}
+            ,{' '}
             <a
               className="link"
               title="Styled components V4: the good, the bad, and something completely different."
@@ -571,7 +584,9 @@ const Presentation = () => (
             </a>
             )
           </ListItem>
-          <ListItem>no cacheable stylesheets (when CSS included in JS)</ListItem>
+          <ListItem>
+            no cacheable stylesheets (when CSS included in JS)
+          </ListItem>
           <ListItem>more total bytes sent (CSS + runtime lib)</ListItem>
           <ListItem>no async loading of CSS (when CSS included in JS)</ListItem>
         </UnorderedList>
@@ -585,8 +600,8 @@ const Presentation = () => (
         </Heading>
         <UnorderedList color="secondary">
           <ListItem>
-            <CodeSpan>create-react-app</CodeSpan> &amp;{" "}
-            <CodeSpan>next.js</CodeSpan> didn't exist
+            <CodeSpan>create-react-app</CodeSpan> &amp;{' '}
+            <CodeSpan>next.js</CodeSpan> didn’t exist
           </ListItem>
           <ListItem>
             <CodeSpan>webpack 2.x</CodeSpan> was in beta
@@ -675,7 +690,7 @@ const Presentation = () => (
           IS HARD
         </Heading>
         <Text color="#fff">
-          If you can, use <CodeSpan>create-react-app</CodeSpan>,{" "}
+          If you can, use <CodeSpan>create-react-app</CodeSpan>,{' '}
           <CodeSpan>next.js</CodeSpan> etc.
         </Text>
       </FlexBox>
@@ -683,9 +698,9 @@ const Presentation = () => (
 
     <Slide backgroundColor="blueDark">
       <FlexBox flexDirection="column" height="100%">
-        <Heading color="blueLight">It's hard to follow</Heading>
+        <Heading color="blueLight">It’s hard to follow</Heading>
         <Text color="#fff">
-          It's hard to rebuild all optimizations and features that{" "}
+          It’s hard to rebuild all optimizations and features that{' '}
           <CodeSpan>next.js</CodeSpan> or <CodeSpan>gatsby</CodeSpan> have built
           in.
         </Text>
@@ -748,7 +763,7 @@ const Presentation = () => (
             Development build
           </Heading>
           <Heading fontSize="30px" color="primary">
-            ❌ Doesn't work
+            ❌ Doesn’t work
           </Heading>
           <Heading fontSize="30px" color="primary">
             Production build
@@ -768,6 +783,7 @@ const Presentation = () => (
         </Heading>
         <Box>
           <iframe
+            title="Dan Abramov - Live React: Hot Reloading with Time Travel at react-europe 2015"
             width="560"
             height="315"
             src="https://www.youtube.com/embed/xsSnOQynTHs"
@@ -788,7 +804,7 @@ const Presentation = () => (
     />
 
     <Slide backgroundColor="codeBackground">
-      <Heading color="blueLight">react-toolbox's defaultChecker</Heading>
+      <Heading color="blueLight">react-toolbox’s defaultChecker</Heading>
       <CodePane
         fontSize={18}
         language="javascript"
@@ -842,13 +858,13 @@ const Presentation = () => (
         <UnorderedList>
           <ListItem>
             <GithubLink href="https://github.com/facebook/react/issues/11128">
-              React 16 client side render doesn't update DOM's style that comes
+              React 16 client side render doesn’t update DOM’s style that comes
               from SSR #11128
             </GithubLink>
           </ListItem>
           <ListItem>
             <GithubLink href="https://github.com/facebook/react/issues/10591">
-              Document that you can't rely on React 16 SSR patching up
+              Document that you can’t rely on React 16 SSR patching up
               differences #10591
             </GithubLink>
           </ListItem>
@@ -893,7 +909,7 @@ const Presentation = () => (
             >
               The Future of Meta Tag Management for Modern React Development:
               Introducing React-Helmet-Async
-            </a>{" "}
+            </a>{' '}
             by Scott Taylor (Lead Software Engineer at The New York Times)
           </Text>
         </Box>
@@ -972,7 +988,7 @@ const Presentation = () => (
             on Tuesday (<CodeSpan>a.12zxc.js, b.98jkl.js, c.45bnm.js</CodeSpan>)
           </ListItem>
           <ListItem>
-            Users from monday doesn't know about{" "}
+            Users from monday doesn’t know about{' '}
             <CodeSpan>b.98jkl.js, c.45bnm.js</CodeSpan>
           </ListItem>
           <ListItem>We need to cover that case</ListItem>
@@ -1013,7 +1029,7 @@ const Presentation = () => (
             >
               {step === 0 && (
                 <Text fontSize="1.5rem" margin="0rem">
-                  It's a root component
+                  It’s a root component
                 </Text>
               )}
 
@@ -1036,12 +1052,12 @@ const Presentation = () => (
 
               {step === 3 && (
                 <Text fontSize="1.5rem" margin="0rem">
-                  Fetch newest deployed version from API, if `result` is{" "}
+                  Fetch newest deployed version from API, if `result` is{' '}
                   <CodeSpan fontSize="1.5rem" color="blueLight">
                     true
                   </CodeSpan>
                   , it means that something went wrong and we render UI in an
-                  error state. If `result` is{" "}
+                  error state. If `result` is{' '}
                   <CodeSpan fontSize="1.5rem" color="blueLight">
                     false
                   </CodeSpan>
@@ -1071,12 +1087,20 @@ const Presentation = () => (
         <FlexBox>
           <Box>
             <a href="https://twitter.com/hinoczek">
-              <img src={twitterLogoSvg} width="60px" />
+              <img
+                src={twitterLogoSvg}
+                width="60px"
+                alt="My profile on Twitter"
+              />
             </a>
           </Box>
           <Box>
             <a href="https://github.com/hinok">
-              <img src={githubLogoImage} width="36px" />
+              <img
+                src={githubLogoImage}
+                width="36px"
+                alt="My profile on Github"
+              />
             </a>
           </Box>
         </FlexBox>
@@ -1085,4 +1109,4 @@ const Presentation = () => (
   </Deck>
 );
 
-ReactDOM.render(<Presentation />, document.getElementById("root"));
+ReactDOM.render(<Presentation />, document.getElementById('root'));

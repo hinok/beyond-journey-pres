@@ -1,0 +1,27 @@
+{
+  "plugins": ["prettier"],
+  "extends": ["airbnb", "prettier", "plugin:react/recommended", "prettier/react"],
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "es2017": true
+  },
+  "rules": {
+    "prettier/prettier": ["error"],
+    "react/jsx-filename-extension": "off",
+    "react/destructuring-assignment": "off",
+    "camelcase": [
+      "error",
+      {
+        "properties": "never",
+        "ignoreDestructuring": false,
+        "allow": ["^UNSAFE_", "^.+__.+"]
+      }
+    ]
+  }
+}

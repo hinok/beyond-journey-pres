@@ -1,7 +1,8 @@
 {
-  "name": "pres-pwr-2020",
+  "name": "beyond-journey-pres",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

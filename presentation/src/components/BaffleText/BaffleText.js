@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import baffle from "baffle";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import baffle from 'baffle';
 
 class BaffleText extends Component {
   constructor(props) {
@@ -39,21 +39,21 @@ class BaffleText extends Component {
     if (!this.baffle) {
       this.baffle = baffle(this.textElement.current, {
         characters: [
-          "█",
-          "▓",
-          "▒",
-          "░",
-          "█",
-          "▓",
-          "▒",
-          "░",
-          "█",
-          "▓",
-          "▒",
-          "░",
-          "<",
-          ">",
-          "/",
+          '█',
+          '▓',
+          '▒',
+          '░',
+          '█',
+          '▓',
+          '▒',
+          '░',
+          '█',
+          '▓',
+          '▒',
+          '░',
+          '<',
+          '>',
+          '/',
         ],
       }).start();
     }

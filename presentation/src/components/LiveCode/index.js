@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import { indentNormalizer, Box, FlexBox } from "spectacle";
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
-import vsDark from "prism-react-renderer/themes/vsDark";
+import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { indentNormalizer, Box, FlexBox } from 'spectacle';
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import vsDark from 'prism-react-renderer/themes/vsDark';
 
 const LiveCode = ({ code }) => {
   const divRef = useRef();
@@ -11,10 +13,10 @@ const LiveCode = ({ code }) => {
       event.stopPropagation();
     };
 
-    divRef.current.addEventListener("keydown", handle);
+    divRef.current.addEventListener('keydown', handle);
 
     return () => {
-      divRef.current.removeEventListener("keydown", handle);
+      divRef.current.removeEventListener('keydown', handle);
     };
   });
 
@@ -35,6 +37,10 @@ const LiveCode = ({ code }) => {
       </FlexBox>
     </LiveProvider>
   );
+};
+
+LiveCode.propTypes = {
+  code: PropTypes.string.isRequired,
 };
 
 export default LiveCode;

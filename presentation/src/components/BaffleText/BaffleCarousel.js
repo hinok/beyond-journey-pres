@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import BaffleText from "./BaffleText";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import BaffleText from './BaffleText';
 
 const BaffleCarousel = ({ texts, duration, textChangeDuration, delay }) => {
   if (textChangeDuration <= duration) {
-    throw new Error("`textChangeDuration` should be greater than `duration`");
+    throw new Error('`textChangeDuration` should be greater than `duration`');
   }
 
   const [index, setIndex] = useState(0);
