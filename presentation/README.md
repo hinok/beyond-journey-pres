@@ -1,3 +1,15 @@
+## Export slides in PDF format
+
+```
+http://localhost:8000/?export
+```
+
+## Presentation
+
+```
+http://localhost:8080/?presenterMode=true
+```
+
 Spectacle Boilerplate
 =====================
 
