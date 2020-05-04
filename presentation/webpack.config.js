@@ -53,7 +53,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title:
-        'Beyond’s journey to server-side rendered application with <br /> react.js, graphql, webpack and ...',
+        'Beyond’s journey to server-side rendered application with react.js, graphql, webpack and ...',
       template: './src/index.html',
     }),
   ],

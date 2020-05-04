@@ -1,7 +1,7 @@
 ## Export slides in PDF format
 
 ```
-http://localhost:8000/?export
+http://localhost:8000/?exportMode=true
 ```
 
 ## Presentation
