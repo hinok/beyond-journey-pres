@@ -16468,6 +16468,35 @@ module.exports = warning;
 
 /***/ }),
 
+/***/ "./node_modules/filter-obj/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/filter-obj/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (obj, predicate) {
+  var ret = {};
+  var keys = Object.keys(obj);
+  var isArr = Array.isArray(predicate);
+
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var val = obj[key];
+
+    if (isArr ? predicate.indexOf(key) !== -1 : predicate(key, val, obj)) {
+      ret[key] = val;
+    }
+  }
+
+  return ret;
+};
+
+/***/ }),
+
 /***/ "./node_modules/gud/index.js":
 /*!***********************************!*\
   !*** ./node_modules/gud/index.js ***!
@@ -21674,7 +21703,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 /*!************************************************!*\
   !*** ./node_modules/is-what/dist/index.esm.js ***!
   \************************************************/
-/*! exports provided: getType, isAnyObject, isArray, isBlob, isBoolean, isDate, isEmptyString, isError, isFile, isFullString, isFunction, isMap, isNull, isNullOrUndefined, isNumber, isObject, isObjectLike, isPlainObject, isPrimitive, isPromise, isRegExp, isSet, isString, isSymbol, isType, isUndefined, isWeakMap, isWeakSet */
+/*! exports provided: getType, isAnyObject, isArray, isBlob, isBoolean, isDate, isEmptyArray, isEmptyObject, isEmptyString, isError, isFile, isFullArray, isFullObject, isFullString, isFunction, isMap, isNaNValue, isNull, isNullOrUndefined, isNumber, isObject, isObjectLike, isOneOf, isPlainObject, isPrimitive, isPromise, isRegExp, isSet, isString, isSymbol, isType, isUndefined, isWeakMap, isWeakSet */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21685,17 +21714,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isBlob", function() { return isBlob; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isBoolean", function() { return isBoolean; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDate", function() { return isDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEmptyArray", function() { return isEmptyArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEmptyObject", function() { return isEmptyObject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEmptyString", function() { return isEmptyString; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isError", function() { return isError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFile", function() { return isFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFullArray", function() { return isFullArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFullObject", function() { return isFullObject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFullString", function() { return isFullString; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFunction", function() { return isFunction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMap", function() { return isMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNaNValue", function() { return isNaNValue; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNull", function() { return isNull; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNullOrUndefined", function() { return isNullOrUndefined; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNumber", function() { return isNumber; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isObject", function() { return isObject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isObjectLike", function() { return isObjectLike; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isOneOf", function() { return isOneOf; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPlainObject", function() { return isPlainObject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPrimitive", function() { return isPrimitive; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPromise", function() { return isPromise; });
@@ -21742,7 +21777,7 @@ function isNull(payload) {
  * Returns whether the payload is a plain JavaScript object (excluding special classes or objects with other prototypes)
  *
  * @param {*} payload
- * @returns {payload is {[key: string]: any}}
+ * @returns {payload is PlainObject}
  */
 
 
@@ -21754,7 +21789,7 @@ function isPlainObject(payload) {
  * Returns whether the payload is a plain JavaScript object (excluding special classes or objects with other prototypes)
  *
  * @param {*} payload
- * @returns {payload is {[key: string]: any}}
+ * @returns {payload is PlainObject}
  */
 
 
@@ -21762,10 +21797,32 @@ function isObject(payload) {
   return isPlainObject(payload);
 }
 /**
+ * Returns whether the payload is a an empty object (excluding special classes or objects with other prototypes)
+ *
+ * @param {*} payload
+ * @returns {payload is { [K in any]: never }}
+ */
+
+
+function isEmptyObject(payload) {
+  return isPlainObject(payload) && Object.keys(payload).length === 0;
+}
+/**
+ * Returns whether the payload is a an empty object (excluding special classes or objects with other prototypes)
+ *
+ * @param {*} payload
+ * @returns {payload is PlainObject}
+ */
+
+
+function isFullObject(payload) {
+  return isPlainObject(payload) && Object.keys(payload).length > 0;
+}
+/**
  * Returns whether the payload is an any kind of object (including special classes or objects with different prototypes)
  *
  * @param {*} payload
- * @returns {payload is {[key: string]: any}}
+ * @returns {payload is PlainObject}
  */
 
 
@@ -21787,26 +21844,48 @@ function isObjectLike(payload) {
   return isAnyObject(payload);
 }
 /**
- * Returns whether the payload is a function
+ * Returns whether the payload is a function (regular or async)
  *
  * @param {*} payload
- * @returns {payload is Function}
+ * @returns {payload is AnyFunction}
  */
 
 
 function isFunction(payload) {
-  return getType(payload) === 'Function';
+  return typeof payload === 'function';
 }
 /**
  * Returns whether the payload is an array
  *
- * @param {*} payload
- * @returns {payload is undefined}
+ * @param {any} payload
+ * @returns {payload is any[]}
  */
 
 
 function isArray(payload) {
   return getType(payload) === 'Array';
+}
+/**
+ * Returns whether the payload is a an array with at least 1 item
+ *
+ * @param {*} payload
+ * @returns {payload is any[]}
+ */
+
+
+function isFullArray(payload) {
+  return isArray(payload) && payload.length > 0;
+}
+/**
+ * Returns whether the payload is a an empty array
+ *
+ * @param {*} payload
+ * @returns {payload is []}
+ */
+
+
+function isEmptyArray(payload) {
+  return isArray(payload) && payload.length === 0;
 }
 /**
  * Returns whether the payload is a string
@@ -21842,9 +21921,9 @@ function isEmptyString(payload) {
   return payload === '';
 }
 /**
- * Returns whether the payload is a number
+ * Returns whether the payload is a number (but not NaN)
  *
- * This will return false for NaN
+ * This will return `false` for `NaN`!!
  *
  * @param {*} payload
  * @returns {payload is number}
@@ -21880,7 +21959,7 @@ function isRegExp(payload) {
  * Returns whether the payload is a Map
  *
  * @param {*} payload
- * @returns {payload is Map}
+ * @returns {payload is Map<any, any>}
  */
 
 
@@ -21891,7 +21970,7 @@ function isMap(payload) {
  * Returns whether the payload is a WeakMap
  *
  * @param {*} payload
- * @returns {payload is WeakMap}
+ * @returns {payload is WeakMap<any, any>}
  */
 
 
@@ -21902,7 +21981,7 @@ function isWeakMap(payload) {
  * Returns whether the payload is a Set
  *
  * @param {*} payload
- * @returns {payload is Set}
+ * @returns {payload is Set<any>}
  */
 
 
@@ -21913,7 +21992,7 @@ function isSet(payload) {
  * Returns whether the payload is a WeakSet
  *
  * @param {*} payload
- * @returns {payload is WeakSet}
+ * @returns {payload is WeakSet<any>}
  */
 
 
@@ -21968,7 +22047,7 @@ function isFile(payload) {
  * Returns whether the payload is a Promise
  *
  * @param {*} payload
- * @returns {payload is Promise}
+ * @returns {payload is Promise<any>}
  */
 
 
@@ -21985,6 +22064,17 @@ function isPromise(payload) {
 
 function isError(payload) {
   return getType(payload) === 'Error';
+}
+/**
+ * Returns whether the payload is literally the value `NaN` (it's `NaN` and also a `number`)
+ *
+ * @param {*} payload
+ * @returns {payload is typeof NaN}
+ */
+
+
+function isNaNValue(payload) {
+  return getType(payload) === 'Number' && isNaN(payload);
 }
 /**
  * Returns whether the payload is a primitive type (eg. Boolean | Null | Undefined | Number | String | Symbol)
@@ -22005,8 +22095,12 @@ function isPrimitive(payload) {
  */
 
 
-function isNullOrUndefined(payload) {
-  return isNull(payload) || isUndefined(payload);
+var isNullOrUndefined = isOneOf(isNull, isUndefined);
+
+function isOneOf(a, b, c, d, e) {
+  return function (value) {
+    return a(value) || b(value) || !!c && c(value) || !!d && d(value) || !!e && e(value);
+  };
 }
 /**
  * Does a generic check to check that the given payload is of a given type.
@@ -25271,13 +25365,29 @@ function _default(options) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+var safeIsNaN = Number.isNaN || function ponyfill(value) {
+  return typeof value === 'number' && value !== value;
+};
+
+function isEqual(first, second) {
+  if (first === second) {
+    return true;
+  }
+
+  if (safeIsNaN(first) && safeIsNaN(second)) {
+    return true;
+  }
+
+  return false;
+}
+
 function areInputsEqual(newInputs, lastInputs) {
   if (newInputs.length !== lastInputs.length) {
     return false;
   }
 
   for (var i = 0; i < newInputs.length; i++) {
-    if (newInputs[i] !== lastInputs[i]) {
+    if (!isEqual(newInputs[i], lastInputs[i])) {
       return false;
     }
   }
@@ -29945,6 +30055,8 @@ const decodeComponent = __webpack_require__(/*! decode-uri-component */ "./node_
 
 const splitOnFirst = __webpack_require__(/*! split-on-first */ "./node_modules/split-on-first/index.js");
 
+const filterObject = __webpack_require__(/*! filter-obj */ "./node_modules/filter-obj/index.js");
+
 const isNullOrUndefined = value => value === null || value === undefined;
 
 function encoderForArrayFormat(options) {
@@ -30048,8 +30160,10 @@ function parserForArrayFormat(options) {
     case 'comma':
     case 'separator':
       return (key, value, accumulator) => {
-        const isArray = typeof value === 'string' && value.split('').indexOf(options.arrayFormatSeparator) > -1;
-        const newValue = isArray ? value.split(options.arrayFormatSeparator).map(item => decode(item, options)) : value === null ? value : decode(value, options);
+        const isArray = typeof value === 'string' && value.includes(options.arrayFormatSeparator);
+        const isEncodedArray = typeof value === 'string' && !isArray && decode(value, options).includes(options.arrayFormatSeparator);
+        value = isEncodedArray ? decode(value, options) : value;
+        const newValue = isArray || isEncodedArray ? value.split(options.arrayFormatSeparator).map(item => decode(item, options)) : value === null ? value : decode(value, options);
         accumulator[key] = newValue;
       };
 
@@ -30141,7 +30255,7 @@ function parseValue(value, options) {
   return value;
 }
 
-function parse(input, options) {
+function parse(query, options) {
   options = Object.assign({
     decode: true,
     sort: true,
@@ -30155,17 +30269,21 @@ function parse(input, options) {
 
   const ret = Object.create(null);
 
-  if (typeof input !== 'string') {
+  if (typeof query !== 'string') {
     return ret;
   }
 
-  input = input.trim().replace(/^[?#&]/, '');
+  query = query.trim().replace(/^[?#&]/, '');
 
-  if (!input) {
+  if (!query) {
     return ret;
   }
 
-  for (const param of input.split('&')) {
+  for (const param of query.split('&')) {
+    if (param === '') {
+      continue;
+    }
+
     let [key, value] = splitOnFirst(options.decode ? param.replace(/\+/g, ' ') : param, '='); // Missing `=` should be `null`:
     // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
 
@@ -30255,26 +30373,64 @@ exports.stringify = (object, options) => {
   }).filter(x => x.length > 0).join('&');
 };
 
-exports.parseUrl = (input, options) => {
-  return {
-    url: removeHash(input).split('?')[0] || '',
-    query: parse(extract(input), options)
-  };
+exports.parseUrl = (url, options) => {
+  options = Object.assign({
+    decode: true
+  }, options);
+  const [url_, hash] = splitOnFirst(url, '#');
+  return Object.assign({
+    url: url_.split('?')[0] || '',
+    query: parse(extract(url), options)
+  }, options && options.parseFragmentIdentifier && hash ? {
+    fragmentIdentifier: decode(hash, options)
+  } : {});
 };
 
-exports.stringifyUrl = (input, options) => {
-  const url = removeHash(input.url).split('?')[0] || '';
-  const queryFromUrl = exports.extract(input.url);
-  const parsedQueryFromUrl = exports.parse(queryFromUrl);
-  const hash = getHash(input.url);
-  const query = Object.assign(parsedQueryFromUrl, input.query);
+exports.stringifyUrl = (object, options) => {
+  options = Object.assign({
+    encode: true,
+    strict: true
+  }, options);
+  const url = removeHash(object.url).split('?')[0] || '';
+  const queryFromUrl = exports.extract(object.url);
+  const parsedQueryFromUrl = exports.parse(queryFromUrl, {
+    sort: false
+  });
+  const query = Object.assign(parsedQueryFromUrl, object.query);
   let queryString = exports.stringify(query, options);
 
   if (queryString) {
     queryString = `?${queryString}`;
   }
 
+  let hash = getHash(object.url);
+
+  if (object.fragmentIdentifier) {
+    hash = `#${encode(object.fragmentIdentifier, options)}`;
+  }
+
   return `${url}${queryString}${hash}`;
+};
+
+exports.pick = (input, filter, options) => {
+  options = Object.assign({
+    parseFragmentIdentifier: true
+  }, options);
+  const {
+    url,
+    query,
+    fragmentIdentifier
+  } = exports.parseUrl(input, options);
+  return exports.stringifyUrl({
+    url,
+    query: filterObject(query, filter),
+    fragmentIdentifier
+  }, options);
+};
+
+exports.exclude = (input, filter, options) => {
+  const exclusionFilter = Array.isArray(filter) ? key => !filter.includes(key) : (key, value) => !filter(key, value);
+  return exports.pick(input, exclusionFilter, options);
 };
 
 /***/ }),
@@ -54124,7 +54280,8 @@ function CodePane(props) {
       return 0;
     }
 
-    var string = ' '.repeat(indentation);
+    var indentString = ' '.repeat(props.indentSize) || ' ';
+    var string = indentString.repeat(indentation);
     context.current.font = "".concat(props.fontSize, "px ").concat(font);
     var measurement = context.current.measureText(string);
     return measurement.width;
@@ -54197,9 +54354,10 @@ CodePane.propTypes = {
   autoFillHeight: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
   children: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string.isRequired,
   fontSize: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
-  language: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string.isRequired,
   highlightEnd: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
   highlightStart: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
+  indentSize: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
+  language: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string.isRequired,
   theme: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object
 };
 CodePane.defaultProps = {
@@ -54289,12 +54447,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hooks_use_transition_pipe__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../hooks/use-transition-pipe */ "./node_modules/spectacle/es/hooks/use-transition-pipe.js");
 /* harmony import */ var _hooks_use_presentation__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../hooks/use-presentation */ "./node_modules/spectacle/es/hooks/use-presentation.js");
 /* harmony import */ var _hooks_use_keyboard_controls__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../hooks/use-keyboard-controls */ "./node_modules/spectacle/es/hooks/use-keyboard-controls.js");
-/* harmony import */ var _utils_constants__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../utils/constants */ "./node_modules/spectacle/es/utils/constants.js");
-/* harmony import */ var _utils_search_children_appear__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../utils/search-children-appear */ "./node_modules/spectacle/es/utils/search-children-appear.js");
-/* harmony import */ var _utils_search_children_stepper__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../utils/search-children-stepper */ "./node_modules/spectacle/es/utils/search-children-stepper.js");
-/* harmony import */ var _overview_deck__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./overview-deck */ "./node_modules/spectacle/es/components/deck/overview-deck.js");
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../index */ "./node_modules/spectacle/es/index.js");
-/* harmony import */ var _utils_notes__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../utils/notes */ "./node_modules/spectacle/es/utils/notes.js");
+/* harmony import */ var _hooks_use_touch_controls__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../hooks/use-touch-controls */ "./node_modules/spectacle/es/hooks/use-touch-controls.js");
+/* harmony import */ var _utils_constants__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../utils/constants */ "./node_modules/spectacle/es/utils/constants.js");
+/* harmony import */ var _utils_search_children_appear__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../utils/search-children-appear */ "./node_modules/spectacle/es/utils/search-children-appear.js");
+/* harmony import */ var _utils_search_children_stepper__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../utils/search-children-stepper */ "./node_modules/spectacle/es/utils/search-children-stepper.js");
+/* harmony import */ var _overview_deck__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./overview-deck */ "./node_modules/spectacle/es/components/deck/overview-deck.js");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../index */ "./node_modules/spectacle/es/index.js");
+/* harmony import */ var _utils_notes__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../utils/notes */ "./node_modules/spectacle/es/utils/notes.js");
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -54404,6 +54563,7 @@ function _taggedTemplateLiteral(strings, raw) {
 
 
 
+
 var AnimatedDeckDiv = Object(styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])(react_spring__WEBPACK_IMPORTED_MODULE_12__["animated"].div)(_templateObject());
 AnimatedDeckDiv.displayName = 'AnimatedDeckDiv';
 var defaultTransition = {
@@ -54462,10 +54622,10 @@ var builtInTransitions = Object.keys(defaultTransition);
  */
 
 var initialState = {
-  currentSlide: _utils_constants__WEBPACK_IMPORTED_MODULE_16__["DEFAULT_SLIDE_INDEX"],
+  currentSlide: _utils_constants__WEBPACK_IMPORTED_MODULE_17__["DEFAULT_SLIDE_INDEX"],
   immediate: false,
   immediateElement: false,
-  currentSlideElement: _utils_constants__WEBPACK_IMPORTED_MODULE_16__["DEFAULT_SLIDE_ELEMENT_INDEX"],
+  currentSlideElement: _utils_constants__WEBPACK_IMPORTED_MODULE_17__["DEFAULT_SLIDE_ELEMENT_INDEX"],
   reverseDirection: false,
   presenterMode: false,
   overviewMode: false,
@@ -54474,14 +54634,14 @@ var initialState = {
 };
 
 var mapMarkdownIntoSlides = function mapMarkdownIntoSlides(child, index) {
-  if (Object(_utils_is_component_type__WEBPACK_IMPORTED_MODULE_6__["default"])(child, _index__WEBPACK_IMPORTED_MODULE_20__["Markdown"].name) && Boolean(child.props.containsSlides)) {
+  if (Object(_utils_is_component_type__WEBPACK_IMPORTED_MODULE_6__["default"])(child, _index__WEBPACK_IMPORTED_MODULE_21__["Markdown"].name) && Boolean(child.props.containsSlides)) {
     return child.props.children.split(/\n\s*---\n/).map(function (markdown, mdIndex) {
       var content = normalize_newline__WEBPACK_IMPORTED_MODULE_3___default()(Object(_utils_indent_normalizer__WEBPACK_IMPORTED_MODULE_4__["default"])(markdown));
-      var contentWithoutNotes = Object(_utils_notes__WEBPACK_IMPORTED_MODULE_21__["removeNotes"])(content);
-      var notes = Object(_utils_notes__WEBPACK_IMPORTED_MODULE_21__["isolateNotes"])(content);
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_index__WEBPACK_IMPORTED_MODULE_20__["Slide"], {
+      var contentWithoutNotes = Object(_utils_notes__WEBPACK_IMPORTED_MODULE_22__["removeNotes"])(content);
+      var notes = Object(_utils_notes__WEBPACK_IMPORTED_MODULE_22__["isolateNotes"])(content);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_index__WEBPACK_IMPORTED_MODULE_21__["Slide"], {
         key: "md-slide-".concat(index, "-").concat(mdIndex)
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_index__WEBPACK_IMPORTED_MODULE_20__["Markdown"], null, contentWithoutNotes), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_index__WEBPACK_IMPORTED_MODULE_20__["Notes"], null, notes));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_index__WEBPACK_IMPORTED_MODULE_21__["Markdown"], null, contentWithoutNotes), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_index__WEBPACK_IMPORTED_MODULE_21__["Notes"], null, notes));
     });
   }
 
@@ -54505,7 +54665,7 @@ var Deck = function Deck(props) {
   var filteredChildren = react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.map(children, mapMarkdownIntoSlides).reduce(function (acc, slide) {
     return acc.concat(slide);
   }, []).filter(function (child) {
-    return Object(_utils_is_component_type__WEBPACK_IMPORTED_MODULE_6__["default"])(child, _index__WEBPACK_IMPORTED_MODULE_20__["Slide"].name);
+    return Object(_utils_is_component_type__WEBPACK_IMPORTED_MODULE_6__["default"])(child, _index__WEBPACK_IMPORTED_MODULE_21__["Slide"].name);
   });
   var numberOfSlides = filteredChildren.length;
 
@@ -54515,8 +54675,8 @@ var Deck = function Deck(props) {
 
   var slideElementMap = react__WEBPACK_IMPORTED_MODULE_0___default.a.useMemo(function () {
     return filteredChildren.reduce(function (map, slide, index) {
-      var appearElements = Object(_utils_search_children_appear__WEBPACK_IMPORTED_MODULE_17__["default"])(slide.props.children);
-      var stepperElements = Object(_utils_search_children_stepper__WEBPACK_IMPORTED_MODULE_18__["default"])(slide.props.children);
+      var appearElements = Object(_utils_search_children_appear__WEBPACK_IMPORTED_MODULE_18__["default"])(slide.props.children);
+      var stepperElements = Object(_utils_search_children_stepper__WEBPACK_IMPORTED_MODULE_19__["default"])(slide.props.children);
       map[index] = appearElements + stepperElements;
       return map;
     }, {});
@@ -54574,6 +54734,10 @@ var Deck = function Deck(props) {
     navigateToNext: navigateToNext,
     navigateToPrevious: navigateToPrevious,
     toggleMode: toggleMode
+  });
+  Object(_hooks_use_touch_controls__WEBPACK_IMPORTED_MODULE_16__["default"])({
+    navigateToNext: navigateToNext,
+    navigateToPrevious: navigateToPrevious
   });
 
   var _React$useContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.useContext(_hooks_use_transition_pipe__WEBPACK_IMPORTED_MODULE_13__["TransitionPipeContext"]),
@@ -54662,7 +54826,7 @@ var Deck = function Deck(props) {
           template: template
         });
       });
-      content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_overview_deck__WEBPACK_IMPORTED_MODULE_19__["default"], {
+      content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_overview_deck__WEBPACK_IMPORTED_MODULE_20__["default"], {
         goToSlide: goToSlide
       }, staticSlides);
     } else if (state.exportMode) {
@@ -54708,7 +54872,7 @@ var Deck = function Deck(props) {
     }
   }
 
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_hooks_use_deck__WEBPACK_IMPORTED_MODULE_5__["DeckContext"].Provider, {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_hooks_use_deck__WEBPACK_IMPORTED_MODULE_5__["DeckContext"].Provider, {
     value: {
       state: state,
       dispatch: dispatch,
@@ -54836,17 +55000,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _hooks_use_deck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../hooks/use-deck */ "./node_modules/spectacle/es/hooks/use-deck.js");
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
-/* harmony import */ var _typography__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../typography */ "./node_modules/spectacle/es/components/typography.js");
-/* harmony import */ var _layout__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../layout */ "./node_modules/spectacle/es/components/layout.js");
-/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
-/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _timer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./timer */ "./node_modules/spectacle/es/components/deck/timer.js");
-/* harmony import */ var _logo__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../logo */ "./node_modules/spectacle/es/components/logo.js");
-/* harmony import */ var _internal_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../internal-button */ "./node_modules/spectacle/es/components/internal-button.js");
-/* harmony import */ var _utils_constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../utils/constants */ "./node_modules/spectacle/es/utils/constants.js");
-/* harmony import */ var broadcastchannel_polyfill__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! broadcastchannel-polyfill */ "./node_modules/broadcastchannel-polyfill/index.js");
-/* harmony import */ var broadcastchannel_polyfill__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(broadcastchannel_polyfill__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _hooks_use_slide__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../hooks/use-slide */ "./node_modules/spectacle/es/hooks/use-slide.js");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
+/* harmony import */ var _typography__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../typography */ "./node_modules/spectacle/es/components/typography.js");
+/* harmony import */ var _layout__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../layout */ "./node_modules/spectacle/es/components/layout.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
+/* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(query_string__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _timer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./timer */ "./node_modules/spectacle/es/components/deck/timer.js");
+/* harmony import */ var _logo__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../logo */ "./node_modules/spectacle/es/components/logo.js");
+/* harmony import */ var _internal_button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../internal-button */ "./node_modules/spectacle/es/components/internal-button.js");
+/* harmony import */ var _utils_constants__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../utils/constants */ "./node_modules/spectacle/es/utils/constants.js");
+/* harmony import */ var broadcastchannel_polyfill__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! broadcastchannel-polyfill */ "./node_modules/broadcastchannel-polyfill/index.js");
+/* harmony import */ var broadcastchannel_polyfill__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(broadcastchannel_polyfill__WEBPACK_IMPORTED_MODULE_12__);
 function _templateObject8() {
   var data = _taggedTemplateLiteral(["\n  border-top: 1px solid black;\n  overflow-y: scroll;\n  background: #404040;\n  flex: 1;\n"]);
 
@@ -54951,19 +55116,21 @@ function _taggedTemplateLiteral(strings, raw) {
 
 
 
-var PresenterDeckContainer = Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["default"])('div')(_templateObject());
-var NotesColumn = Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["default"])('div')(_templateObject2());
-var PreviewColumn = Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["default"])('div')(_templateObject3());
-var SlideContainer = Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["default"])('div')(_templateObject4());
-var SlideWrapper = Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["default"])('div')(_templateObject5(), function (_ref) {
+
+var PresenterDeckContainer = Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["default"])('div')(_templateObject());
+var NotesColumn = Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["default"])('div')(_templateObject2());
+var PreviewColumn = Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["default"])('div')(_templateObject3());
+var SlideContainer = Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["default"])('div')(_templateObject4());
+var SlideWrapper = Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["default"])('div')(_templateObject5(), function (_ref) {
   var small = _ref.small;
-  return small && Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["css"])(_templateObject6());
+  return small && Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["css"])(_templateObject6());
 });
-var SlideCountLabel = Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["default"])('span')(_templateObject7());
-var NotesContainer = Object(styled_components__WEBPACK_IMPORTED_MODULE_3__["default"])('div')(_templateObject8());
+var SlideCountLabel = Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["default"])('span')(_templateObject7());
+var NotesContainer = Object(styled_components__WEBPACK_IMPORTED_MODULE_4__["default"])('div')(_templateObject8());
 
 var PresenterDeck = function PresenterDeck(props) {
   var _React$useContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.useContext(_hooks_use_deck__WEBPACK_IMPORTED_MODULE_2__["DeckContext"]),
+      slideElementMap = _React$useContext.slideElementMap,
       _React$useContext$sta = _React$useContext.state,
       currentNotes = _React$useContext$sta.currentNotes,
       currentSlide = _React$useContext$sta.currentSlide,
@@ -54976,68 +55143,78 @@ var PresenterDeck = function PresenterDeck(props) {
       startConnection = props.startConnection,
       terminateConnection = props.terminateConnection,
       children = props.children;
+  var countSlideElements = react__WEBPACK_IMPORTED_MODULE_0___default.a.useCallback(function (slideNumber) {
+    return slideElementMap[slideNumber];
+  }, [slideElementMap]);
   var onStartConnection = react__WEBPACK_IMPORTED_MODULE_0___default.a.useCallback(function () {
-    var urlParams = query_string__WEBPACK_IMPORTED_MODULE_6__["stringify"]({
+    var urlParams = query_string__WEBPACK_IMPORTED_MODULE_7__["stringify"]({
       slide: currentSlide,
       slideElement: currentSlideElement,
       immediate: immediate || undefined
     });
     startConnection(urlParams);
   }, [currentSlide, currentSlideElement, immediate, startConnection]);
-  var activeSlide = children.length > currentSlide ? children[currentSlide] : null;
-  var nextSlide = children.length > currentSlide + 1 ? children[currentSlide + 1] : null;
+  var activeSlide = children.length > currentSlide ? children[currentSlide] : null; // Show next animation in the preview slide if there are animations left on the current slide
+
+  var showNextElement = currentSlideElement + 1 < countSlideElements(currentSlide); // If there are no animations left on the current slide, then show the next slide in the preview
+
+  var nextSlide = showNextElement ? activeSlide : children.length > currentSlide + 1 ? children[currentSlide + 1] : null;
   var castButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.useMemo(function () {
     if (isReceiver || typeof window.navigator.presentation === 'undefined') {
       return null;
     }
 
     if (isController) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_internal_button__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_internal_button__WEBPACK_IMPORTED_MODULE_10__["default"], {
         "data-testid": "Close Connection",
         onClick: terminateConnection
       }, "Stop Casting");
     }
 
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_internal_button__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_internal_button__WEBPACK_IMPORTED_MODULE_10__["default"], {
       "data-testid": "Start Connection",
       onClick: onStartConnection
     }, "Cast to Secondary Display");
   }, []);
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PresenterDeckContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(NotesColumn, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_layout__WEBPACK_IMPORTED_MODULE_5__["FlexBox"], {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PresenterDeckContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(NotesColumn, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_layout__WEBPACK_IMPORTED_MODULE_6__["FlexBox"], {
     justifyContent: "space-between",
     paddingTop: 10,
     paddingX: 15
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo__WEBPACK_IMPORTED_MODULE_8__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_layout__WEBPACK_IMPORTED_MODULE_5__["FlexBox"], {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo__WEBPACK_IMPORTED_MODULE_9__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_layout__WEBPACK_IMPORTED_MODULE_6__["FlexBox"], {
     width: 0.75,
     flexDirection: "column",
     alignItems: "flex-end"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_4__["Text"], {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_5__["Text"], {
     "data-testid": "use-browser-tab-text",
     fontSize: 15,
-    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_10__["SYSTEM_FONT"],
+    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_11__["SYSTEM_FONT"],
     textAlign: "right",
     padding: "0px",
     margin: "0px 0px 10px"
-  }, "Open a second browser tab at ", window.location.host, " to use as the audience deck", !!castButton && ' or use Chrome’s display cast to present on a secondary display', "."), castButton)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_layout__WEBPACK_IMPORTED_MODULE_5__["Box"], {
+  }, "Open a second browser tab at ", window.location.host, " to use as the audience deck", !!castButton && ' or use Chrome’s display cast to present on a secondary display', "."), castButton)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_layout__WEBPACK_IMPORTED_MODULE_6__["Box"], {
     paddingRight: 15
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_timer__WEBPACK_IMPORTED_MODULE_7__["Timer"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(NotesContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_4__["Text"], {
-    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_10__["SYSTEM_FONT"],
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_timer__WEBPACK_IMPORTED_MODULE_8__["Timer"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(NotesContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_5__["Text"], {
+    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_11__["SYSTEM_FONT"],
     lineHeight: "1.2",
     fontSize: "1.5vw"
-  }, currentNotes))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PreviewColumn, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_4__["Text"], {
+  }, currentNotes))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PreviewColumn, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_5__["Text"], {
     fontSize: 20,
     fontWeight: "bold",
-    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_10__["SYSTEM_FONT"],
+    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_11__["SYSTEM_FONT"],
     textAlign: "center"
-  }, "Current\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideCountLabel, null, "Slide ", activeSlide.props.slideNum + 1, " of ", numberOfSlides)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideWrapper, null, activeSlide)), !!nextSlide && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_4__["Text"], {
+  }, "Current\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideCountLabel, null, "Slide ", activeSlide.props.slideNum + 1, " of ", numberOfSlides)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideWrapper, null, activeSlide)), !!nextSlide && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideContainer, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_typography__WEBPACK_IMPORTED_MODULE_5__["Text"], {
     fontSize: 20,
-    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_10__["SYSTEM_FONT"],
+    fontFamily: _utils_constants__WEBPACK_IMPORTED_MODULE_11__["SYSTEM_FONT"],
     fontWeight: "bold",
     textAlign: "center"
-  }, "Next\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideCountLabel, null, "Slide ", nextSlide.props.slideNum + 1, " of ", numberOfSlides)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideWrapper, {
+  }, "Next\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideCountLabel, null, "Slide ", nextSlide.props.slideNum + 1, " of ", numberOfSlides)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_hooks_use_slide__WEBPACK_IMPORTED_MODULE_3__["SlideNextElementContext"].Provider, {
+    value: {
+      showNextElement: showNextElement
+    }
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideWrapper, {
     small: true,
     "data-testid": "Next Slide"
-  }, nextSlide))));
+  }, nextSlide)))));
 };
 
 PresenterDeck.propTypes = {
@@ -55404,91 +55581,122 @@ function SpectacleLogo(props) {
     width: Math.floor(props.size * 1.012),
     height: props.size,
     viewBox: "0 0 601 595"
-  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("g", {
+  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("title", null, "Spectacle"), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("g", {
+    id: "Finals",
+    stroke: "none",
+    strokeWidth: "1",
     fill: "none",
     fillRule: "evenodd"
+  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("g", {
+    id: "The-Good-Badges-for-OSS-usage",
+    transform: "translate(-1006.000000, -337.000000)"
+  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("g", {
+    id: "Badge-Copy-4",
+    transform: "translate(1006.666667, 327.000000)"
   }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#202020",
-    d: "M342.277 19.4l195.971 87.165C575.801 123.268 600 160.515 600 201.616v211.961c0 41.1-24.199 78.348-61.752 95.051l-195.971 87.165a104.029 104.029 0 01-84.554 0L61.752 508.628C24.199 491.925 0 454.678 0 413.578V201.615c0-41.1 24.199-78.348 61.752-95.05L257.723 19.4a104.029 104.029 0 0184.554 0z",
-    transform: "translate(.667 -10)"
+    d: "M342.276968,19.4007702 L538.247998,106.565184 C575.801346,123.268242 600,160.515702 600,201.616141 L600,413.57732 C600,454.677759 575.801346,491.925219 538.247998,508.628277 L342.276968,595.79269 C315.36338,607.763373 284.63662,607.763373 257.723032,595.79269 L61.7520017,508.628277 C24.1986538,491.925219 2.32856136e-14,454.677759 0,413.57732 L0,201.616141 C2.33883573e-14,160.515702 24.1986538,123.268242 61.7520017,106.565184 L257.723032,19.4007702 C284.63662,7.43008735 315.36338,7.43008735 342.276968,19.4007702 Z",
+    id: "Polygon-Copy-4",
+    fill: "#202020"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
+    d: "M332.268654,53.3025417 C311.655676,44.165094 288.140981,44.165094 267.528004,53.3025417 L76.380235,138.035705 C51.5383581,149.047766 35.5217047,173.667505 35.5217047,200.840733 L35.5217047,414.543463 C35.5217047,441.716691 51.5383581,466.336431 76.380235,477.348491 L267.528004,562.081654 C288.140981,571.219102 311.655676,571.219102 332.268654,562.081654 L523.416422,477.348491 C548.258299,466.336431 564.274953,441.716691 564.274953,414.543463 L564.274953,200.840733 C564.274953,173.667505 548.258299,149.047766 523.416422,138.035705 L332.268654,53.3025417 Z",
+    id: "Polygon-Copy-5",
     stroke: "#FC6986",
-    strokeWidth: "24.247",
-    d: "M332.269 53.303a79.877 79.877 0 00-64.741 0L76.38 138.036c-24.842 11.012-40.858 35.632-40.858 62.805v213.702c0 27.174 16.016 51.793 40.858 62.805l191.148 84.734a79.877 79.877 0 0064.74 0l191.148-84.734c24.842-11.012 40.859-35.631 40.859-62.805V200.841c0-27.173-16.017-51.793-40.859-62.805L332.27 53.303z",
-    opacity: ".499",
-    transform: "translate(.667 -10)"
+    strokeWidth: "24.2467521",
+    opacity: "0.499209449"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
+    d: "M337.398856,30.3681883 C313.590683,19.7787381 286.409317,19.7787381 262.601144,30.3681883 L66.6301133,117.532602 C33.409844,132.308384 12.0033426,165.25806 12.0033426,201.616141 L12.0033426,413.57732 C12.0033426,449.9354 33.409844,482.885076 66.6301133,497.660859 L262.601144,584.825272 C286.409317,595.414722 313.590683,595.414722 337.398856,584.825272 L533.369887,497.660859 C566.590156,482.885076 587.996657,449.9354 587.996657,413.57732 L587.996657,201.616141 C587.996657,165.25806 566.590156,132.308384 533.369887,117.532602 L337.398856,30.3681883 Z",
+    id: "Polygon-Copy",
     stroke: "#FC6986",
-    strokeWidth: "24.007",
-    d: "M337.399 30.368a92.026 92.026 0 00-74.798 0l-195.97 87.165c-33.221 14.775-54.628 47.725-54.628 84.083v211.961c0 36.358 21.407 69.308 54.627 84.084l195.971 87.164a92.026 92.026 0 0074.798 0l195.97-87.164c33.221-14.776 54.628-47.726 54.628-84.084v-211.96c0-36.359-21.407-69.309-54.627-84.084L337.399 30.368z",
-    transform: "translate(.667 -10)"
-  }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("g", null, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#F14E74",
-    d: "M157.997 216.514L50.114 111.686C36.908 98.854 38.448 77.149 53.33 66.33c14.884-10.82 35.883-5.501 43.882 11.116l65.348 135.75c1.392 2.891-2.266 5.55-4.564 3.318",
-    transform: "translate(.667 -10) translate(130 145)"
+    strokeWidth: "24.0066852"
+  }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("g", {
+    id: "peacock",
+    transform: "translate(130.000000, 145.000000)"
+  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("g", {
+    id: "Group-41"
+  }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
+    d: "M157.997195,216.513892 L50.113914,111.685631 C36.9081129,98.854247 38.4478205,77.1487901 53.3314404,66.3299245 C68.2150602,55.5097309 89.2138965,60.8288626 97.213107,77.4462524 L162.56147,213.195992 C163.953154,216.086954 160.294861,218.746188 157.997195,216.513892",
+    id: "Fill-1",
+    fill: "#F14E74"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FC6986",
-    d: "M162.555 213.17L97.09 77.479c-8.014-16.61.855-36.461 18.533-41.483 17.677-5.023 35.578 7.223 37.407 25.59l14.947 150.046c.318 3.196-4.027 4.43-5.422 1.54",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M162.555456,213.170628 L97.0901287,77.4779906 C89.0763801,60.8685685 97.9452281,41.0169395 115.622789,35.9946062 C133.300351,30.9722728 151.201269,43.2180282 153.030415,61.5843374 L167.976813,211.630862 C168.295327,214.82659 163.949784,216.06159 162.555456,213.170628",
+    id: "Fill-3",
+    fill: "#FC6986"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#E13E65",
-    d: "M154.775 221.155l-137.206-61.1c-16.795-7.48-22.786-28.39-12.52-43.697 10.267-15.307 31.805-17.577 45.008-4.743L157.924 216.46c2.297 2.233-.226 5.996-3.149 4.694",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M154.775373,221.155235 L17.5689228,160.054606 C0.774215205,152.575552 -5.21742807,131.664877 5.04905146,116.358181 C15.315531,101.050821 36.8535953,98.7813422 50.057414,111.614719 L157.924174,216.460907 C160.22118,218.693866 157.698174,222.456633 154.775373,221.155235",
+    id: "Fill-5",
+    fill: "#E13E65"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FC6986",
-    d: "M4.005 118.137c.736-1.507 6.489-12.257 22.256-14.9 7.154-1.198 17.406 1.147 25.97 10.593l99.313 96.342.715 4.147-97.933-76.994s-15.567-12.2-33.372-.767l-.043-.046a12.583 12.583 0 01-6.663 1.913c-7.015 0-12.702-5.715-12.702-12.763 0-2.818.92-5.413 2.46-7.525",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M4.00509006,118.137444 C4.74058129,116.629549 10.493669,105.879737 26.2614643,103.237103 C33.4148269,102.038622 43.6667684,104.383794 52.2309789,113.829552 L151.544102,210.171503 L152.259108,214.318713 L54.3264351,137.325095 C54.3264351,137.325095 38.7588678,125.12449 20.9537684,136.558199 L20.911476,136.512385 C18.9726339,137.716842 16.6947918,138.424643 14.2477801,138.424643 C7.23252865,138.424643 1.54618363,132.710444 1.54618363,125.662312 C1.54618363,122.844388 2.46604327,120.248896 4.00509006,118.137444",
+    id: "Fill-8",
+    fill: "#FC6986"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
+    d: "M51.445662,67.7016376 C52.6490129,66.5363554 61.7075158,58.4046108 77.4264105,61.3274441 C84.5573053,62.6527452 93.3970772,68.3735839 98.2402175,80.1890812 L158.827381,205.336412 L158.091229,209.480302 L92.2287497,102.992095 C92.2287497,102.992095 81.7395743,86.1861349 61.1207088,90.8280086 L61.0962585,90.7702425 C58.8646737,91.2383473 56.483083,91.1221511 54.1827731,90.2835462 C47.589124,87.8779522 44.184586,80.5569253 46.5780713,73.9317478 C47.5355977,71.2831376 49.2814807,69.1584065 51.445662,67.7016376",
+    id: "Fill-10",
+    fill: "#FF92AC"
+  }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
+    d: "M113.547092,36.7877285 C115.075565,36.1098065 126.366975,31.6080323 140.123899,39.7895753 C146.364671,43.4998871 152.704565,51.9284301 153.203484,64.6967366 L167.214162,203.152188 L165.103507,206.78747 L139.747893,84.0271425 C139.747893,84.0271425 135.656764,64.620379 114.70815,61.8469409 L114.704185,61.7845269 C112.448811,61.4518737 110.252911,60.5196478 108.380811,58.9353952 C103.014302,54.3971022 102.325729,46.3463629 106.842425,40.9535296 C108.648443,38.7975914 111.016156,37.4072204 113.547092,36.7877285",
+    id: "Fill-12",
+    fill: "#FF92AC"
+  }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
+    d: "M151.276404,53.9526349 L150.254778,187.165976 C150.254778,187.165976 154.309562,217.05032 159.359539,223.198097 L135.69496,212.686654 C126.754743,205.082108 129.101971,188.118122 129.101971,188.118122 L151.276404,53.9526349 Z",
+    id: "Fill-14",
+    fill: "#FF92AC"
+  }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
+    d: "M168.915836,224.707254 L168.915836,224.707254 C151.277263,224.707254 136.977807,210.340087 136.977807,192.617173 L155.552099,12.7699664 C156.26314,5.89048522 162.032088,0.663646505 168.915836,0.663646505 C175.798924,0.663646505 181.568532,5.89048522 182.279573,12.7699664 L200.853865,192.617173 C200.853865,210.340087 186.554409,224.707254 168.915836,224.707254",
+    id: "Fill-16",
+    fill: "#E13E65"
+  }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("polyline", {
+    id: "Fill-19",
     fill: "#FF92AC",
-    d: "M51.446 67.702c1.203-1.166 10.262-9.297 25.98-6.375 7.131 1.326 15.971 7.047 20.814 18.862l60.587 125.147-.736 4.144L92.23 102.992S81.739 86.186 61.12 90.828l-.025-.058a12.569 12.569 0 01-6.913-.486c-6.594-2.406-9.998-9.727-7.605-16.352a12.68 12.68 0 014.868-6.23M113.547 36.788c1.529-.678 12.82-5.18 26.577 3.002 6.24 3.71 12.58 12.138 13.08 24.907l14.01 138.455-2.11 3.635-25.356-122.76s-4.091-19.407-25.04-22.18l-.004-.062a12.587 12.587 0 01-6.323-2.85c-5.367-4.538-6.055-12.589-1.539-17.981a12.619 12.619 0 016.705-4.166",
-    transform: "translate(.667 -10) translate(130 145)"
+    points: "159.624989 31.3611651 168.931299 47.8450952 178.284527 31.5716462"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FF92AC",
-    d: "M151.276 53.953l-1.021 133.213s4.055 29.884 9.105 36.032l-23.665-10.511c-8.94-7.605-6.593-24.569-6.593-24.569l22.174-134.165z",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M182.263846,14.0756137 C182.263846,21.4829578 179.448097,38.1116352 168.915968,38.1116352 C158.824606,38.1116352 155.56743,21.4829578 155.56743,14.0756137 C155.56743,6.6689336 161.543875,0.663912097 168.915968,0.663912097 C176.288062,0.663912097 182.263846,6.6689336 182.263846,14.0756137",
+    id: "Fill-21",
+    fill: "#FC6986"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#E13E65",
-    d: "M168.916 224.707c-17.639 0-31.938-14.367-31.938-32.09L155.552 12.77c.711-6.88 6.48-12.106 13.364-12.106 6.883 0 12.653 5.226 13.364 12.106l18.574 179.847c0 17.723-14.3 32.09-31.938 32.09",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M222.788685,35.994075 L222.788685,35.994075 C207.35196,31.608497 191.746065,40.3922685 186.819662,54.920118 L203.394317,156.089857 L241.320685,77.4787874 C249.334434,60.8687013 240.465586,41.0164083 222.788685,35.994075",
+    id: "Fill-24",
+    fill: "#FC6986"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FF92AC",
-    d: "M159.625 31.361L168.931 47.845 178.285 31.572",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M169.522798,201.453134 C168.427161,201.31569 151.604699,198.872249 152.015728,179.057803 L155.604635,89.921346 C156.096944,77.7174212 154.639178,65.5121685 151.287506,53.7703728 L136.968225,192.634835 C136.896196,193.331349 136.928576,194.013255 137.042237,194.669265 C137.411635,199.682303 139.575816,212.770647 151.963523,219.965518 C156.151792,222.397671 161.622711,224.640591 168.359757,224.697693 L168.361079,224.671798 C168.468132,224.675117 168.57188,224.687733 168.678933,224.687733 C175.076319,224.687733 180.262424,219.477494 180.262424,213.048854 C180.262424,206.907053 175.525015,201.888703 169.522798,201.453134",
+    id: "Fill-26",
+    fill: "#FC6986"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FC6986",
-    d: "M182.264 14.076c0 7.407-2.816 24.036-13.348 24.036-10.091 0-13.349-16.629-13.349-24.036S161.544.664 168.916.664s13.348 6.005 13.348 13.412M222.789 35.994c-15.437-4.386-31.043 4.398-35.97 18.926l16.575 101.17 37.927-78.611c8.013-16.61-.855-36.463-18.532-41.485M169.523 201.453c-1.096-.137-17.918-2.58-17.507-22.395l3.589-89.137a114.848 114.848 0 00-4.317-36.15l-14.32 138.864a7.42 7.42 0 00.074 2.034c.37 5.013 2.534 18.102 14.922 25.297 4.188 2.432 9.659 4.675 16.396 4.732l.001-.026c.107.003.21.016.318.016 6.397 0 11.583-5.21 11.583-11.64 0-6.14-4.737-11.16-10.74-11.595",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M140.85298,89.3432199 C140.85298,89.3432199 143.110998,103.144677 140.570811,118.648575 L143.110998,110.708056 L145.557349,91.8012683 L140.85298,89.3432199 Z",
+    id: "Fill-28",
+    fill: "#FF92AC"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FF92AC",
-    d: "M140.853 89.343s2.258 13.802-.282 29.306l2.54-7.94 2.446-18.908-4.704-2.458zM231.569 40.954a12.619 12.619 0 00-6.705-4.166c-1.528-.678-12.82-5.18-26.577 3.001-4.512 2.684-9.065 7.847-11.436 15.322l7.867 48.02 3.945-19.104s4.091-19.406 25.04-22.18l.004-.062a12.592 12.592 0 006.323-2.849c5.368-4.539 6.056-12.59 1.539-17.982",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M231.568785,40.9537952 C229.762768,38.797857 227.395054,37.407486 224.864119,36.7879941 C223.335645,36.110072 212.044236,31.6082978 198.287312,39.7891769 C193.774581,42.472978 189.22154,47.6360747 186.851183,55.1111446 L194.717569,103.130069 L198.663318,84.0274081 C198.663318,84.0274081 202.754446,64.6206446 223.70306,61.8478704 L223.707025,61.7847925 C225.962399,61.4521392 228.1583,60.5199134 230.030399,58.9363247 C235.397569,54.3973677 236.086142,46.3459645 231.568785,40.9537952",
+    id: "Fill-30",
+    fill: "#FF92AC"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#F14E74",
-    d: "M285.08 66.33c-14.883-10.82-35.883-5.5-43.881 11.116l-37.818 78.56 5.327 32.518s.024.156.058.44l79.532-77.278c13.206-12.832 11.665-34.537-3.218-45.356",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M285.080233,66.3295925 L285.080233,66.3295925 C270.196613,55.5093989 249.197116,60.8291946 241.198566,77.4459204 L203.380572,156.005864 L208.708092,188.523547 C208.708092,188.523547 208.731882,188.680246 208.766244,188.964428 L288.297759,111.685963 C301.50356,98.8539151 299.963192,77.149122 285.080233,66.3295925",
+    id: "Fill-32",
+    fill: "#F14E74"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FF92AC",
-    d: "M291.833 73.932a12.685 12.685 0 00-4.867-6.23c-1.204-1.166-10.262-9.298-25.981-6.374-7.131 1.325-15.971 7.045-20.813 18.86l-36.77 75.95 2.076 12.667 40.704-65.812s10.49-16.807 31.108-12.165l.025-.058c2.232.468 4.613.353 6.913-.487 6.595-2.405 10-9.726 7.605-16.351",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M291.833007,73.9316151 C290.876142,71.2836688 289.129598,69.1589376 286.966077,67.7015048 C285.762065,66.5362226 276.703563,58.404478 260.984668,61.3279753 C253.853773,62.6532763 245.014001,68.3734511 240.171522,80.1889484 L203.402247,156.138128 L205.477878,168.804846 L246.182329,102.992626 C246.182329,102.992626 256.671504,86.1860022 277.29037,90.8278758 L277.31482,90.7701097 C279.547065,91.2382145 281.927995,91.1226823 284.228305,90.2834134 C290.822615,87.8778194 294.227153,80.5574565 291.833007,73.9316151",
+    id: "Fill-34",
+    fill: "#FF92AC"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#E13E65",
-    d: "M333.362 116.358c-10.267-15.307-31.805-17.577-45.008-4.743l-79.587 77.358c.325 2.7 1.61 16.966-6.418 23.849l118.493-52.767c16.795-7.48 22.786-28.39 12.52-43.697",
-    transform: "translate(.667 -10) translate(130 145)"
+    d: "M333.361961,116.358181 L333.361961,116.357517 C323.095481,101.050821 301.557417,98.7813422 288.354259,111.614719 L208.767236,188.972861 C209.091698,191.673926 210.37699,205.93884 202.348704,212.821641 L320.842089,160.054606 C337.637458,152.575552 343.62844,131.665541 333.361961,116.358181",
+    id: "Fill-36",
+    fill: "#E13E65"
   }), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("path", {
-    fill: "#FC6986",
-    d: "M334.406 118.137c-.735-1.507-6.488-12.257-22.256-14.9-7.154-1.199-17.406 1.147-25.97 10.593l-77.415 75.128c.128 1.057.407 3.946.2 7.476l75.12-59.109s15.567-12.201 33.372-.767l.043-.046a12.58 12.58 0 006.664 1.913c7.015 0 12.702-5.715 12.702-12.763 0-2.818-.92-5.413-2.46-7.525",
-    transform: "translate(.667 -10) translate(130 145)"
-  })), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("text", {
-    fill: "#FC6986",
-    fontFamily: "Castledown-Bold, Castledown",
-    fontSize: "52.014",
+    d: "M334.40612,118.137444 C333.670629,116.629549 327.917542,105.879737 312.149746,103.237767 C304.996384,102.037958 294.744442,104.383794 286.180232,113.830216 L208.765319,188.958054 C208.892857,190.015108 209.172384,192.904078 208.964887,196.434452 L284.085436,137.325095 C284.085436,137.325095 299.652343,125.123826 317.457442,136.558199 L317.499735,136.512385 C319.439237,137.717506 321.716419,138.424643 324.164091,138.424643 C331.178682,138.424643 336.865688,132.710444 336.865688,125.662312 C336.865688,122.844388 335.945167,120.248896 334.40612,118.137444",
+    id: "Fill-39",
+    fill: "#FC6986"
+  }))), react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("text", {
+    id: "SPECTACLE",
+    fontFamily: "Helvetica-Bold, Helvetica",
+    fontSize: "52.0144847",
     fontWeight: "bold",
-    letterSpacing: "3.853",
-    transform: "translate(.667 -10)"
+    "line-spacing": "40.0111421",
+    letterSpacing: "3.85292292",
+    fill: "#FC6986"
   }, react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("tspan", {
-    x: "143",
-    y: "472"
-  }, "SPECTACLE"))));
+    x: "125.5",
+    y: "467"
+  }, "SPECTACLE"))))));
 }
 SpectacleLogo.propTypes = {
   size: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number
@@ -55766,6 +55974,55 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var styled_system__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! styled-system */ "./node_modules/styled-system/dist/index.esm.js");
 /* harmony import */ var _hooks_use_autofill_height__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../hooks/use-autofill-height */ "./node_modules/spectacle/es/hooks/use-autofill-height.js");
 /* harmony import */ var _hooks_use_deck__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../hooks/use-deck */ "./node_modules/spectacle/es/hooks/use-deck.js");
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
 }
@@ -55915,6 +56172,9 @@ var Slide = function Slide(props) {
   var _React$useContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.useContext(_hooks_use_deck__WEBPACK_IMPORTED_MODULE_6__["DeckContext"]),
       state = _React$useContext.state;
 
+  var _ref5 = react__WEBPACK_IMPORTED_MODULE_0___default.a.useContext(_hooks_use_slide__WEBPACK_IMPORTED_MODULE_2__["SlideNextElementContext"]) || {},
+      showNextElement = _ref5.showNextElement;
+
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(scaleRatio || 1),
       _React$useState2 = _slicedToArray(_React$useState, 2),
       ratio = _React$useState2[0],
@@ -55995,6 +56255,16 @@ var Slide = function Slide(props) {
     contentRef: contentRef,
     slideHeight: slideHeight
   });
+
+  if (showNextElement) {
+    // Next slide preview in the presenter mode might need to show the next animation
+    value = _objectSpread({}, value, {
+      state: _objectSpread({}, value.state, {
+        currentSlideElement: value.state.currentSlideElement + 1
+      })
+    });
+  }
+
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SlideContainer, {
     ref: slideRef,
     backgroundColor: state.printMode ? '#ffffff' : backgroundColor,
@@ -56664,8 +56934,10 @@ var useKeyboardControls = function useKeyboardControls(_ref) {
         }
       }
 
-      if (!!e.altKey && Object(_utils_detect_platform__WEBPACK_IMPORTED_MODULE_3__["isMacOS"])()) {
-        switch (e.key) {
+      if (e.altKey && Object(_utils_detect_platform__WEBPACK_IMPORTED_MODULE_3__["isMacOS"])()) {
+        var key = e.key.toLowerCase();
+
+        switch (key) {
           case 'ø':
             toggleMode('overviewMode');
             break;
@@ -56681,8 +56953,10 @@ var useKeyboardControls = function useKeyboardControls(_ref) {
           default:
             null;
         }
-      } else if (!!e.altKey && !!e.shiftKey && Object(_utils_detect_platform__WEBPACK_IMPORTED_MODULE_3__["isWindows"])()) {
-        switch (e.key) {
+      } else if (e.altKey && (Object(_utils_detect_platform__WEBPACK_IMPORTED_MODULE_3__["isWindows"])() || Object(_utils_detect_platform__WEBPACK_IMPORTED_MODULE_3__["isLinux"])())) {
+        var _key = e.key.toUpperCase();
+
+        switch (_key) {
           case 'O':
             toggleMode('overviewMode');
             break;
@@ -56899,12 +57173,13 @@ var MSG_SLIDE_STATE_CHANGE = 'MSG_SLIDE_STATE_CHANGE';
 /*!******************************************************!*\
   !*** ./node_modules/spectacle/es/hooks/use-slide.js ***!
   \******************************************************/
-/*! exports provided: SlideContext, default */
+/*! exports provided: SlideContext, SlideNextElementContext, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SlideContext", function() { return SlideContext; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SlideNextElementContext", function() { return SlideNextElementContext; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _use_deck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./use-deck */ "./node_modules/spectacle/es/hooks/use-deck.js");
@@ -56925,6 +57200,7 @@ __webpack_require__.r(__webpack_exports__);
 // Initialise SlideContext.
 
 var SlideContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext();
+var SlideNextElementContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext();
 
 function useSlide(slideNum) {
   // Gets state, dispatch and number of slides off DeckContext.
@@ -56968,6 +57244,84 @@ function useSlide(slideNum) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (useSlide);
+
+/***/ }),
+
+/***/ "./node_modules/spectacle/es/hooks/use-touch-controls.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/spectacle/es/hooks/use-touch-controls.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * Hook that navigates to next or previous slide when the user swipes
+ * left or right in a touch device, where there is no keyboard.
+ */
+
+var useTouchControls = function useTouchControls(_ref) {
+  var navigateToNext = _ref.navigateToNext,
+      navigateToPrevious = _ref.navigateToPrevious;
+  var touchId = react__WEBPACK_IMPORTED_MODULE_0___default.a.useRef(null); // To keep track of which touch started the swipe.
+
+  var startTouchX = react__WEBPACK_IMPORTED_MODULE_0___default.a.useRef(0); // Where the swipe started.
+
+  var threshold = 100; // Pixels the user must drag to trigger a slide swipe.
+
+  react__WEBPACK_IMPORTED_MODULE_0___default.a.useEffect(function () {
+    /**
+     * Keep track of which touch even we're following.
+     */
+    function handleTouchStart(e) {
+      if (touchId.current === null) {
+        var touch = e.changedTouches[0];
+        touchId.current = touch.identifier;
+        startTouchX.current = touch.clientX;
+      }
+    }
+    /**
+     * Only care about the touch we're tracking.
+     * See how much the user swiped, if it's more than
+     * the threshold, navigate to the previous or next slide.
+     */
+
+
+    function handleTouchEnd(e) {
+      var touchList = e.changedTouches;
+
+      for (var i = 0; i < touchList.length; i++) {
+        var touch = touchList[i];
+
+        if (touch.identifier === touchId.current) {
+          touchId.current = null;
+          var distance = touch.clientX - startTouchX.current;
+
+          if (distance > threshold) {
+            navigateToPrevious();
+          } else if (distance < -threshold) {
+            navigateToNext();
+          }
+
+          break;
+        }
+      }
+    }
+
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
+    return function () {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [navigateToNext, navigateToPrevious]);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (useTouchControls);
 
 /***/ }),
 
@@ -57230,7 +57584,7 @@ function useUrlRouting(options) {
       return;
     }
 
-    var reverseDirection = slideNumber < currentSlide || slideElementNumber < currentSlideElement;
+    var reverseDirection = slideNumber < currentSlide || slideNumber == currentSlide && slideElementNumber < currentSlideElement;
     var update = {
       slideNumber: slideNumber,
       slideElementNumber: slideElementNumber,
@@ -57695,18 +58049,22 @@ function debounce(func, wait, immediate) {
 /*!************************************************************!*\
   !*** ./node_modules/spectacle/es/utils/detect-platform.js ***!
   \************************************************************/
-/*! exports provided: isWindows, isMacOS */
+/*! exports provided: isWindows, isMacOS, isLinux */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isWindows", function() { return isWindows; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMacOS", function() { return isMacOS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isLinux", function() { return isLinux; });
 var isWindows = function isWindows() {
   return navigator.platform.toLowerCase().includes('win32');
 };
 var isMacOS = function isMacOS() {
   return navigator.platform.toLowerCase().includes('macintel');
+};
+var isLinux = function isLinux() {
+  return navigator.platform.toLowerCase().includes('linux');
 };
 
 /***/ }),
@@ -64687,7 +65045,7 @@ const Presentation = () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___defau
   flexDirection: "column"
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["Heading"], {
   color: "blueDark"
-}, "When we started ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, "4 years ago...")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["UnorderedList"], {
+}, "When we started ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, "5 years ago...")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["UnorderedList"], {
   color: "secondary"
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["CodeSpan"], null, "create-react-app"), " &", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["CodeSpan"], null, "next.js"), " didn\u2019t exist"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["CodeSpan"], null, "webpack 2.x"), " was in beta"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["CodeSpan"], null, "react-router"), " 4.x was in beta"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["CodeSpan"], null, "apollo"), " 0.x"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["ListItem"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["CodeSpan"], null, "storybook"), " 2.x"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["ListItem"], null, "CSS-in-JS was still super new...")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["Slide"], {
   backgroundColor: "codeBackground"
@@ -65051,8 +65409,8 @@ const Presentation = () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___defau
 }, "Questions?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["Text"], {
   color: "secondary",
   fontSize: "30px"
-}, "Dawid Karabin, Wroc\u0142aw 2020"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["FlexBox"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-  href: "https://twitter.com/hinoczek"
+}, "Dawid Karabin, Wroc\u0142aw 2020 - 2021"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["FlexBox"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(spectacle__WEBPACK_IMPORTED_MODULE_2__["Box"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+  href: "https://twitter.com/dawidkarabin"
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
   src: _images_twitter_logo_svg__WEBPACK_IMPORTED_MODULE_32__["default"],
   width: "60px",
