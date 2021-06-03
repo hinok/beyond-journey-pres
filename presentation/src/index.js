@@ -596,7 +596,7 @@ const Presentation = () => (
     <Slide backgroundColor="#fff">
       <FlexBox height="100%" flexDirection="column">
         <Heading color="blueDark">
-          When we started <small>4 years ago...</small>
+          When we started <small>5 years ago...</small>
         </Heading>
         <UnorderedList color="secondary">
           <ListItem>
@@ -1082,11 +1082,11 @@ const Presentation = () => (
         <Heading color="blueDark">Thanks!</Heading>
         <Text color="secondary">Questions?</Text>
         <Text color="secondary" fontSize="30px">
-          Dawid Karabin, Wrocław 2020
+          Dawid Karabin, Wrocław 2020 - 2021
         </Text>
         <FlexBox>
           <Box>
-            <a href="https://twitter.com/hinoczek">
+            <a href="https://twitter.com/dawidkarabin">
               <img
                 src={twitterLogoSvg}
                 width="60px"
